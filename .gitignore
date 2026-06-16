@@ -86,3 +86,6 @@ scripts/fix_v_areas_with_teams.sql
 
 # Estado en tiempo de ejecución del super-agent (se genera automáticamente)
 agent-state.json
+
+# PDFs generados en runtime (reportes de diagnóstico, no son código)
+backend/reports/
