@@ -1,0 +1,74 @@
+LA DIFERENCIA ENTRE UN KR CRITICO Y UN INDICADOR NO-NEGOCIABLE 
+
+La forma más clara (y útil para el Consejo) es explicar que son dos “tipos” de cosas distintas:
+
+* KR Crítico = una condición de desempeño dentro de un OKR (un “gate” o palanca clave).
+
+* No Negociable = una regla/guardrail de gobernanza que no se puede violar, aunque el desempeño o las prioridades cambien.
+
+1) Definiciones simples (en lenguaje de Consejo)
+KR Crítico (Key Result crítico)
+
+* Es el KR que determina si el Objetivo realmente está logrando lo que importa.
+* Funciona como indicador líder / restricción / cuello de botella.
+* Si ese KR falla, el objetivo puede “verse bien” en otros KRs, pero estratégicamente no cuenta.
+* Se gestiona con prioridad, recursos, foco, y si se complica… se escalan trade-offs.
+
+No Negociable
+* Es una línea roja definida por el Consejo: un estándar, límite o condición que no se transgrede.
+* No depende del trimestre; es un marco de decisión (compliance, apetito de riesgo, solvencia, reputación, seguridad, ética, límites regulatorios, etc.).
+* Se gestiona con control, aseguramiento y escalamiento inmediato si está en riesgo.
+
+2) Diferencia en una frase
+* KR Crítico: “Si esto no se cumple, el OKR no sirve.”
+* No Negociable: “Aunque el OKR lo pida, esto NO se puede romper.”
+
+3) Cómo se usan en la práctica (para que el Consejo actúe bien)
+Cuando un KR Crítico está en rojo
+
+El Consejo pregunta:
+* “¿Qué trade-off necesitas? (recursos, alcance, tiempo)”
+* “¿Qué bloqueo estructural no puedes resolver?”
+* “¿Qué decisión del Consejo cambia el resultado?”
+
+
+
+
+Cuando un No Negociable está en riesgo
+El Consejo exige:
+* “¿Cuál es la exposición y qué control inmediato se activa?”
+* “¿Qué se detiene o se limita para volver a cumplimiento?”
+* “¿Quién es responsable del aseguramiento y cuándo se verifica?”
+
+4) Ejemplos rápidos (muy didácticos)
+Ejemplo KR Crítico
+Objetivo: “Mejorar experiencia del cliente”
+* KR1: NPS +10
+* KR2: Tiempo de respuesta -30%
+* KR3 (Crítico): % de casos resueltos en primer contacto = 85%
+
+Si KR3 no mejora, el NPS puede subir por campañas, pero la experiencia real sigue débil.
+
+Ejemplo No Negociable
+* “Cumplimiento regulatorio sin desviaciones materiales”
+* “Mantener indicadores de solvencia por arriba del umbral del Consejo”
+* “Cero tolerancia a prácticas que afecten reputación / ética”
+
+5) Regla práctica para clasificar (muy útil en el taller)
+
+Usen estas dos preguntas:
+
+1. ¿Esto define si el Objetivo es real o “cosmético”?
+? entonces es KR Crítico.
+
+2. ¿Esto es un límite que no se cruza aunque sea ‘conveniente’ para el resultado?
+? entonces es No Negociable.
+
+A veces un KR puede monitorear un No Negociable (ej. “Índice de solvencia”), pero la naturaleza sigue distinta: el KR mide; el No Negociable gobierna.
+
+6) Cómo mostrarlo en el Pulso (recomendación de diseño)
+En el Pulso mensual, que se vea explícitamente:
+* KR Crítico: marcado con un ícono (?) y una sección “Gates del OKR”.
+* No Negociables: banda separada tipo “Guardrails del Consejo” con estado + tendencia + acciones de control.
+Así el Consejo no mezcla conversaciones:
+performance (KRs críticos) vs constrains/guardrails (no negociables).

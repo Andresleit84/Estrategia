@@ -1,0 +1,181 @@
+Big Room Planning
+Guía Ejecutiva Completa
+ANTES · DURANTE · DESPUÉS
+Revisión Trimestral de Negocio (RTN)
+Valladolid Caja Financiera
+Resumen Ejecutivo
+¿Qué es el BRP?¿Por qué es crítico?Sesión colaborativa intensiva de 10 horas donde transformamos objetivos estratégicos en trabajo ejecutable con sprints definidos, historias asignadas y equipos completamente listos para iniciar el CT.Es el momento de transformación donde la estrategia deja de ser documento y se convierte en acción. Sin BRP efectivo, los equipos inician sin claridad, generando desperdicio y retrabajos.
+Resultados Esperados del BRP
+Sprint 1
+100% Ready
+Historias asignadas, estimadas y en herramientaSprint 2
+Draft Avanzado
+Historias priorizadas listas para refinamientoEquipos
+100% Alineados
+Comprometidos y listos para ejecutar
+
+PARTE 1
+ANTES DEL BRP
+Preparación y Pre-Requisitos
+PRINCIPIO CRÍTICO: Un BRP sin preparación adecuada es una pérdida de tiempo organizacional. Si los pre-requisitos no están completos, es mejor POSPONER el evento.
+1. Timeline de Preparación
+La preparación del BRP inicia 14 días antes del evento con actividades específicas que deben completarse en fechas determinadas:
+DíaActividad ClaveResponsableEntregableStatusD-14Confirmación fecha BRP y envío de convocatoriaCoach Agilidad + ComunicaciónInvitaciones enviadas?D-10Refinamiento completo de épicas y featuresProduct Owners + EquiposBacklog refinado 100%?D-7Validación y aprobación final de OKRs trimestralesDirector General + ComitéOKRs aprobados?D-5Cierre y negociación de dependencias entre áreasLíderes de ObjetivosMatriz dependencias?D-4Confirmación final de capacidad de recursosLíderes + RRHHMatriz de capacidad?D-3Verificación logística y setup técnico completoLogística + ITChecklist logístico?D-2Configuración y prueba de Agility InsightsAdmin Herramienta + ITHerramienta operativa?D-1Sesión prep facilitadores y validación finalCoach + Scrum MastersFacilitadores listos?
+
+2. Pre-Requisitos Detallados
+2.1. Contenido Estratégico
+ElementoEstado RequeridoCriterio de ValidaciónObjetivos Trimestrales (OKRs)100% aprobados por Dirección GeneralDocumento firmado con OKRs finalesBacklog de Épicas y FeaturesRefinado y priorizado en Agility InsightsCada épica tiene criterios de aceptaciónMatriz de DependenciasTodas negociadas y/o cerradasAcuerdos firmados por líderes de áreaCapacidad de RecursosConfirmada y asignada por áreaTabla de asignación de personas validada2.2. Infraestructura y Logística
+CategoríaRequisitosVerificaciónEspacio Físico• Sala para 30-50 personas
+• Mesas para trabajo en equipo
+• Breakout rooms disponiblesVisita previa 3 días antesTecnología• Wifi estable y redundante
+• Proyector + pantallas
+• Acceso a Agility InsightsPrueba técnica 1 día antesMateriales• Post-its, marcadores, pizarras
+• Agendas impresas
+• Templates de trabajoInventario 2 días antesCatering• Desayuno ligero (7:45)
+• 2 coffee breaks
+• Almuerzo buffetConfirmación 5 días antes2.3. Preparación de Participantes
+Todos los participantes deben llegar preparados con:
+1. Conocimiento profundo de sus objetivos trimestrales asignados
+2. Backlog de épicas revisado y comprendido
+3. Identificación preliminar de historias de usuario
+4. Claridad sobre capacidad de su equipo
+5. Laptop con acceso a Agility Insights funcionando
+PARTE 2
+DURANTE EL BRP
+Ejecución del Día - 10 Horas
+3. Flujo del Día BRP
+El BRP se estructura en 7 fases claramente definidas, cada una con objetivos específicos, actividades, responsables y entregables concretos:
+HorarioFaseObjetivoResponsableEntregable Clave8:00-8:451. Apertura y AlineamientoEnergizar y alinear a todos con el propósitoCEO + CoachEquipos alineados y motivados8:45-10:452. Desagregación en HistoriasConvertir épicas en historias de usuarioPO + Equipos15-20 historias por equipo10:45-11:00  BREAKDescanso y networking——11:00-12:303. Estimación y PriorizaciónEstimar esfuerzo y ordenar backlogSM + EquiposBacklog estimado y priorizado12:30-13:30 ALMUERZOComida y recarga de energía——13:30-15:304. Construcción Sprints 1 y 2Sprint 1 100% ready, Sprint 2 draftSM + POSprints planificados15:30-15:45 BREAKDescanso final——15:45-17:155. Riesgos y CoordinaciónIdentificar riesgos y sincronizar equiposDir OperacionesMatriz riesgos, coordinación17:15-18:006. Config Agility InsightsCargar todo en la herramientaSM + AdminAgility 100% actualizado18:00-18:307. Cierre y CompromisoCelebrar logros y comprometer resultadosCEO + CoachCompromisos públicos
+
+4. Detalle Ejecutivo por Fase
+FASE 1Apertura y Alineamiento (45 min)PropósitoEnergizar y alinear a todos los participantes con el propósito estratégico del CTActividades• Mensaje estratégico del CEO (5 min)
+• Revisión OKRs trimestrales (15 min)
+• Explicación dinámica del día (10 min)
+• Normas de colaboración (5 min)
+• Q&A rápida (10 min)ResponsableDirector General (CEO) + Coach de AgilidadEntregableEquipos energizados, alineados y comprometidos con el día
+FASE 2Desagregación en Historias de Usuario (2 horas)PropósitoTransformar épicas priorizadas en historias de usuario concretas y ejecutablesActividades• Trabajo en breakout rooms por equipo
+• Descomposición de épicas usando formato estándar
+• Definición de criterios de aceptación claros
+• Identificación de dependencias técnicas
+• Checkpoint cada 30 min en plenariaResponsableProduct Owners (lideran) + Scrum Masters (facilitan) + Equipos técnicosEntregableMínimo 15-20 historias de usuario documentadas por equipo con criterios de aceptación
+FASE 3Estimación y Priorización (1.5 horas)PropósitoAsignar estimaciones de esfuerzo y establecer orden de ejecución del backlogActividades• Planning Poker o T-Shirt Sizing para estimar
+• Debate técnico sobre complejidad
+• Priorización MoSCoW (Must/Should/Could/Won't)
+• Ordenamiento por valor, dependencias y riesgo
+• Validación de alcance vs. capacidadResponsableScrum Master (facilita) + Product Owner (valida valor) + Equipos técnicosEntregableTodas las historias estimadas y backlog priorizado con orden de ejecución claro
+
+FASE 4Construcción de Sprints 1 y 2 (2 horas)PropósitoCrear planes de trabajo detallados: Sprint 1 100% ready para iniciar el lunesActividadesSPRINT 1 (100% Completo):
+• Asignación de historias a personas
+• Definition of Done por historia
+• Fechas de entrega definidas
+• Bloqueadores identificados
+SPRINT 2 (Draft Avanzado):
+• Selección de historias prioritarias
+• Asignación preliminar de recursosResponsableScrum Master + Product Owner (co-facilitación) + Equipos completosEntregableSprint 1 Backlog 100% ready + Sprint 2 en draft + Tabla de asignaciones
+FASE 5: Riesgos y Coordinación (Detalle Completo)
+FASE 5Identificación de Riesgos y Coordinación (1.5 horas)PropósitoAnticipar problemas potenciales, establecer planes de mitigación y crear mecanismos de coordinación entre equipos para asegurar fluidez en la ejecuciónEstructuraParte A: Identificación y Gestión de Riesgos (45 min)
+Parte B: Coordinación Interdependencias (45 min)
+
+Parte A: Identificación y Gestión de Riesgos (45 minutos)
+Flujo de Trabajo:
+TiempoActividadTécnicaResponsable15 minBrainstorming individual de riesgos por equipoPost-its + categorizaciónEquipos15 minConsolidación y evaluación (probabilidad/impacto)Matriz 3x3Plenaria facilitada15 minDefinición de planes de mitigación para riesgos Alto y MedioFramework 4 accionesLíderes + POsMatriz de Probabilidad / Impacto
+Probabilidad / ImpactoBAJOMEDIOALTOALTAMEDIOALTOCRÍTICOMEDIABAJOMEDIOALTOBAJABAJOBAJOMEDIOCategorías de Riesgos Comunes en BRP
+CategoríaRiesgos Típicos1. Técnicos• API externa no disponible o sin documentación
+• Infraestructura cloud con límites de capacidad
+• Deuda técnica que bloquea nuevas funcionalidades
+• Incompatibilidad entre versiones de sistemas legados
+• Falta de ambientes de prueba suficientes2. De Recursos• Personas clave con vacaciones programadas durante Sprint 1
+• Falta de especialistas en tecnologías específicas (ej: React Native)
+• Capacidad de QA insuficiente para testing paralelo
+• Rotación de personal durante el CT
+• Sobrecarga de equipos con soporte operativo3. De Dependencias• Retraso en entregables de equipos externos (proveedores)
+• Dependencia crítica con área que tiene baja capacidad
+• Aprobaciones regulatorias con tiempos inciertos
+• Integraciones con sistemas de terceros no confirmadas
+• Cambios en roadmap de plataformas externas (ej: iOS, Android)4. De Requisitos• Requisitos ambiguos o incompletos que requieren re-trabajo
+• Cambios regulatorios que modifiquen alcance
+• Expectativas de stakeholders no alineadas con capacidad
+• Complejidad técnica subestimada en épicas
+• Falta de claridad en criterios de aceptación5. Organizacionales• Cambios de prioridades a mitad del sprint
+• Falta de disponibilidad de stakeholders para validaciones
+• Resistencia al cambio en áreas operativas
+• Conflictos de recursos entre proyectos simultáneos
+• Comunicación deficiente entre equipos distribuidos6. De Seguridad/Compliance• Auditoría de seguridad identifica vulnerabilidades críticas
+• Cambios en normativas de protección de datos
+• Falta de certificaciones necesarias para go-live
+• Requerimientos de compliance no identificados temprano
+• Incidentes de seguridad que requieren atención inmediata
+Matriz de Riesgos con Planes de Mitigación (Ejemplos)
+RiesgoProb.ImpactoPlan de MitigaciónResponsableAPI de pagos externa no disponibleMediaAltoCrear servicio mock temporal + contactar proveedor con SLA definidoArquitecto Técnico + POLíder de QA con vacaciones Semana 2AltaMedioContratar recurso temporal QA + transferencia conocimiento anticipadaLíder de QA + RRHHCambios regulatorios en proceso de KYCBajaAltoMonitoreo semanal boletines regulatorios + arquitectura flexible para cambiosCompliance Officer + ArquitectoConflicto de recursos con proyecto paraleloMediaBajoAcuerdo previo de priorización con PMO + buffer de 10% en estimacionesPMO + Líderes de ÁreaInfraestructura cloud con límites de capacidadMediaMedioSolicitud de ampliación capacidad con 2 semanas anticipación + plan de escalamientoLíder de Infraestructura + ITRequisitos ambiguos en historia críticaAltaBajoSesión de refinamiento extra día 1 del Sprint + validación con stakeholderProduct Owner + Equipo
+
+
+
+Parte B: Coordinación de Interdependencias (45 minutos)
+Objetivo: Establecer mecanismos de sincronización entre equipos para gestionar handoffs, puntos de integración y dependencias críticas.
+TiempoActividadMetodologíaSalida10 minPresentación de dependencias críticas por equipoPlenaria 3 min por equipoLista consolidada15 minConfirmación de handoffs y puntos de integraciónMapeo visual en pizarraDiagrama dependencias10 minDefinición de ceremonias de coordinación necesariasFramework Scrum of ScrumsCalendario ceremonias10 minEstablecimiento de canales de comunicación y escalaciónMatriz RACI + Slack channelsPlan de comunicaciónCalendario de Ceremonias de Coordinación (Ejemplo)
+CeremoniaObjetivoParticipantesFrecuenciaDuraciónScrum of ScrumsSincronizar equipos con dependencias1 rep por equipo + SM2x semana30 minTech SyncResolver bloqueos técnicos y arquitecturaLíderes técnicos + ArquitectoSemanal1 horaPO SyncAlinear prioridades y criterios aceptaciónProduct OwnersSemanal45 minIntegration ReviewValidar puntos de integración funcionandoEquipos con dependenciasQuincenal1 horaEntregables Finales de Fase 5
+1. Matriz de Riesgos Completa con probabilidad, impacto y planes de mitigación para todos los riesgos Alto y Medio
+2. Responsables Asignados para monitoreo y seguimiento de cada riesgo
+3. Calendario de Ceremonias de coordinación programadas (Scrum of Scrums, Tech Sync, etc.)
+4. Matriz de Dependencias con puntos de contacto, fechas críticas y handoffs definidos
+5. Plan de Comunicación con canales Slack/Teams, frecuencia y protocolos de escalación
+6. Acuerdos de Nivel de Servicio entre equipos con dependencias críticas
+
+Fases Finales (17:15 - 18:30)
+FasePropósito y ActividadesEntregable6. Config Agility Insights (45min)Carga de historias Sprint 1
+Asignación de personas
+Configuración de tableros
+Verificación de accesosAgility Insights 100% operativo con Sprint 1 cargado7. Cierre y Compromiso (30min)Resumen de logros del día
+Compromisos públicos por equipo
+Mensaje motivacional CEO
+CelebraciónActa de compromiso + Comunicado interno + Foto del equipo
+
+PARTE 3
+DESPUÉS DEL BRP
+Seguimiento y Consolidación
+El trabajo no termina cuando finaliza el BRP. Los siguientes 7 días son críticos para consolidar los resultados y asegurar un inicio de CT exitoso.
+5. Acciones Post-BRP
+5.1. Primeras 24 Horas (Día D+1)
+TimingActividadResponsable9:00 AMEnvío de Acta de BRP con resumen ejecutivo y compromisosCoach de Agilidad10:00 AMComunicado interno a toda la organización sobre resultadosComunicación CorporativaDurante el díaVerificación individual con cada equipo que Agility esté correctoScrum Masters5:00 PMSesión debrief con facilitadores (lecciones aprendidas)Coach + Scrum Masters
+5.2. Primera Semana Post-BRP (Días 2-7)
+DíaAcción ClaveObjetivoLíderLunes (D+3)INICIO OFICIAL SPRINT 1 - Daily Standup 9:00 AMArrancar ejecución con ceremoniaSMMartesRevisión de impedimentos y bloqueadoresIdentificar y escalar problemas tempranoSMMiércolesPrimera revisión de progreso con liderazgoValidar que ejecución va según planPOJuevesAjustes a dependencias si es necesarioResolver problemas de coordinaciónLíderesViernesRefinamiento de Sprint 2 (2 horas)Detallar historias de Sprint 2PO + Equipo
+
+5.3. Métricas de Seguimiento
+Para asegurar que el BRP está generando los resultados esperados, se deben monitorear las siguientes métricas durante las primeras 2 semanas:
+MétricaObjetivoFrecuencia% Historias Sprint 1 completadas on-time? 80%Final Sprint 1# Bloqueadores escalados > 24 horas= 0Diario% Equipos con Daily Standup ejecutado100%DiarioNivel de confianza del equipo (escala 1-10)? 8Semanal
+
+6. Mensaje Final para Liderazgo
+El Big Room Planning es más que una sesión de planificación: es el momento donde la visión estratégica se transforma en compromiso ejecutable. Su éxito requiere preparación meticulosa ANTES, facilitación disciplinada DURANTE, y seguimiento riguroso DESPUÉS.
+Factores Críticos de Éxito
+6. Compromiso total del liderazgo - CEO y Directores presentes todo el día
+7. Pre-requisitos 100% completos - No negociable, mejor posponer que fallar
+8. Facilitación profesional - Coach de Agilidad con experiencia
+9. Respeto al timeboxing - Sin excepciones en horarios
+10. Seguimiento disciplinado - Primera semana post-BRP es crítica
+
+ROI Esperado del BRP
+Reducción de Retrabajos
+30-40%
+Por claridad desde día 1Velocidad de Entrega
++25%
+Por eliminación de esperasEngagement de Equipos
+85%+
+Por sentido de propósitoCumplimiento OKRs
+80%+
+Por alineación estratégica
+El BRP es la inversión más importante que hacemos al inicio de cada CT.
+Una jornada bien ejecutada puede determinar el éxito de los siguientes 90 días.
+
+
+Documento Preparado Para:
+Valladolid Caja Financiera (VCF)
+Comité Gerencial y Liderazgo Ejecutivo
+Diciembre 2025
+
+
+_____________________________________________________________________________________
+
+Página 1	COPYRIGHT © 2025	SENDOAGIL
+
+Todos los derechos reservados. Prohibida la reproducción, copia o distribución sin autorización expresa de SENDOAGIL. 
+

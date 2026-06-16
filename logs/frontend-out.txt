@@ -1,0 +1,216 @@
+
+> frontend@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.24.16.1:3000
+- Environments: .env.development.local, .env.local
+✓ Ready in 8.5s
+⚠ Slow filesystem detected. The benchmark took 659ms. If D:\Estrategia\frontend\.next/dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development
+
+○ Compiling /strategic ...
+
+thread 'tokio-runtime-worker' (16428) panicked at C:\actions-runner\svc-home\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tokio-1.43.0\src\io\blocking.rs:76:46:
+OS can't spawn worker thread: El archivo de paginación es demasiado pequeño para completar la operación. (os error 1455)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to C:\Users\Usuario\AppData\Local\Temp\next-panic-bd5ac4c9dea12c1fbcadb8941c4abff4.log.
+
+To help make Turbopack better, report this error by ]8;;https://bugs.nextjs.org/search?category=turbopack-error-report&title=Turbopack%20Error%3A%20reading%20file%20D%3A%5CEstrategia%5Cfrontend%5C.next%5Cdev%5Cserver%5Cmiddleware.js&body=Turbopack%20version%3A%20%602275bd85%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0Areading%20file%20D%3A%5CEstrategia%5Cfrontend%5C.next%5Cdev%5Cserver%5Cmiddleware.js%0A%0ACaused%20by%3A%0A-%20No%20hay%20suficientes%20recursos%20de%20memoria%20disponibles%20para%20procesar%20este%20comando.%20%28os%20error%208%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace\clicking here.]8;;\
+-----
+
+
+
+
+#
+
+# Fatal JavaScript out of memory: MemoryChunk allocation failed during deserialization.
+#
+#
+
+# Fatal JavaScript out of memory: MemoryChunk allocation failed during deserialization.
+----- Native stack trace -----
+<--- Last few GCs --->
+#
+
+
+----- Native stack trace -----
+ 1: 00007FF72E6818E7 node::SetCppgcReference+18263
+
+
+ 2: 00007FF72E5520FF node::TriggerNodeReport+71583
+<--- JS stacktrace --->
+ 1: 00007FF72E6818E7 node::SetCppgcReference+18263
+
+ 3: 00007FF72F851016 v8::base::FatalOOM+54
+ 2: 00007FF72E5520FF node::TriggerNodeReport+71583
+ 4: 00007FF72F1EAEA3 v8::Isolate::ReportExternalAllocationLimitReached+147
+FATAL ERROR: Committing semi space failed. Allocation failed - JavaScript heap out of memory
+ 3: 00007FF72F851016 v8::base::FatalOOM+54
+ 5: 00007FF72F1D7916 v8::Function::Experimental_IsNopFunction+3302
+----- Native stack trace -----
+ 4: 00007FF72F1EAEA3 v8::Isolate::ReportExternalAllocationLimitReached+147
+ 6: 00007FF72F034060 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+33904
+
+ 5: 00007FF72F1D7916 v8::Function::Experimental_IsNopFunction+3302
+ 7: 00007FF72EFFB081 v8::CpuProfileNode::GetScriptResourceNameStr+3121
+ 1: 00007FF72E6818E7 
+ 6: 00007FF72F034060 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+33904
+ 8: 00007FF72EFFB6A0 v8::CpuProfileNode::GetScriptResourceNameStr+4688
+ 2: 00007FF72E5E212B 
+ 7: 00007FF72EFFB081 v8::CpuProfileNode::GetScriptResourceNameStr+3121
+ 9: 00007FF72EFFB3A6 v8::CpuProfileNode::GetScriptResourceNameStr+3926
+ 3: 00007FF72F1EAE51 
+ 8: 00007FF72EFFB6A0 v8::CpuProfileNode::GetScriptResourceNameStr+4688
+10: 00007FF72EFEAE8B v8::PrimitiveArray::Length+127115
+ 4: 00007FF72F1D7916 
+ 9: 00007FF72EFFB3A6 v8::CpuProfileNode::GetScriptResourceNameStr+3926
+11: 00007FF72EFEA4BA v8::PrimitiveArray::Length+124602
+ 5: 00007FF72F034060 
+10: 00007FF72EFEAE8B v8::PrimitiveArray::Length+127115
+12: 00007FF72F041EA0 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+90800
+ 6: 00007FF72EFEBCBD 
+11: 00007FF72EFEA4BA v8::PrimitiveArray::Length+124602
+13: 00007FF72F0A5F83 v8::base::CPU::has_sse41+73859
+ 7: 00007FF72F03D2A3 
+12: 00007FF72F041EA0 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+90800
+14: 00007FF72ECD8FF3 v8::base::AddressSpaceReservation::AddressSpaceReservation+12051
+ 8: 00007FF72F02D12D 
+13: 00007FF72F0A5F83 v8::base::CPU::has_sse41+73859
+15: 00007FF72F1E0A41 v8::Isolate::Initialize+433
+ 9: 00007FF72F028CE5 
+14: 00007FF72ECD8FF3 v8::base::AddressSpaceReservation::AddressSpaceReservation+12051
+16: 00007FF72E6C098D node::NewContext+397
+15: 00007FF72F1E0A41 v8::Isolate::Initialize+433
+10: 00007FF72E9B273D 
+17: 00007FF72E4988F5 X509_CRL_get_meth_data+144357
+16: 00007FF72E6C098D node::NewContext+397
+18: 00007FF72E49ED22 X509_CRL_get_meth_data+170002
+17: 00007FF72E4988F5 X509_CRL_get_meth_data+144357
+19: 00007FF72E492305 X509_CRL_get_meth_data+118261
+18: 00007FF72E49ED22 X509_CRL_get_meth_data+170002
+20: 00007FF72E6E18F3 uv_poll_stop+371
+19: 00007FF72E492305 X509_CRL_get_meth_data+118261
+21: 00007FF72FF6964B inflateValidate+186203
+20: 00007FF72E6E18F3 uv_poll_stop+371
+22: 00007FF8A3F7E8D7 
+21: 00007FF72FF6964B inflateValidate+186203
+23: 00007FF8A46AC48C RtlUserThreadStart+44
+22: 00007FF8A3F7E8D7 
+23: 00007FF8A46AC48C RtlUserThreadStart+44
+
+<--- Last few GCs --->
+
+[23788:00000169CDA01000]      731 ms: Scavenge 3.6 (5.1) -> 3.2 (5.6) MB, pooled: 0 MB, 424.92 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[23788:00000169CDA01000]     1430 ms: Scavenge 4.3 (5.8) -> 4.0 (6.3) MB, pooled: 0 MB, 1.86 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: NewSpace::EnsureCurrentCapacity Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF72E6818E7 
+ 2: 00007FF72E5E212B 
+ 3: 00007FF72F1EAE51 
+ 4: 00007FF72F1D7916 
+ 5: 00007FF72F034060 
+ 6: 00007FF72F010DE0 
+ 7: 00007FF72F03ACFB 
+ 8: 00007FF72F03D30E 
+ 9: 00007FF72F02D12D 
+10: 00007FF72F028CE5 
+11: 00007FF72E9B273D 
+
+<--- Last few GCs --->
+
+[23236:0000025DF86B7000]    10944 ms: Mark-Compact (reduce) 9.9 (14.8) -> 9.0 (11.6) MB, pooled: 0 MB, 560.36 / 0.00 ms  (average mu = 0.949, current mu = 0.949) last resort; GC in old space requested
+[23236:0000025DF86B7000]    11478 ms: Mark-Compact (reduce) 9.0 (11.6) -> 9.0 (10.8) MB, pooled: 0 MB, 532.25 / 0.00 ms  (average mu = 0.905, current mu = 0.002) last resort; GC in old space requested
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Committing semi space failed. Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF72E6818E7 
+ 2: 00007FF72E5E212B 
+ 3: 00007FF72F1EAE51 
+ 4: 00007FF72F1D7916 
+ 5: 00007FF72F034060 
+ 6: 00007FF72EFEBCBD 
+ 7: 00007FF72F03D2A3 
+ 8: 00007FF72F02D12D 
+ 9: 00007FF72F028CE5 
+10: 00007FF72E9B273D 
+11: 7FF8000000000000 
+[Server HMR] Subscription error: Error [TurbopackInternalError]: reading file D:\Estrategia\frontend\.next\dev\server\middleware.js
+
+Caused by:
+- No hay suficientes recursos de memoria disponibles para procesar este comando. (os error 8)
+    at <unknown> (TurbopackInternalError: reading file D:\Estrategia\frontend\.next\dev\server\middleware.js) {
+  location: undefined
+}
+
+<--- Last few GCs --->
+
+[28696:0000024C63A0D000]     3421 ms: Scavenge 6.4 (8.0) -> 6.4 (10.8) MB, pooled: 0 MB, 1.48 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+[28696:0000024C63A0D000]     4475 ms: Scavenge 7.9 (10.8) -> 7.4 (11.3) MB, pooled: 0 MB, 22.51 / 0.00 ms  (average mu = 1.000, current mu = 1.000) allocation failure; 
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Zone Allocation failed - process out of memory
+----- Native stack trace -----
+
+ 1: 00007FF72E6818E7 
+ 2: 00007FF72E5E212B 
+ 3: 00007FF72F1EAE51 
+ 4: 00007FF72F1D7916 
+ 5: 00007FF72ECBA12B 
+ 6: 00007FF72EDB735C 
+ 7: 00007FF72EDC84E8 
+ 8: 00007FF72EDBCCF4 
+ 9: 00007FF72EDC22BE 
+10: 00007FF72EDC276E 
+11: 00007FF72EDCE4FF 
+12: 00007FF72EDC5A48 
+13: 00007FF72EDBC93D 
+14: 00007FF72EDBCEB1 
+15: 00007FF72EDBCD41 
+16: 00007FF72EDC22BE 
+17: 00007FF72EDCAEF7 
+18: 00007FF72EDC84C9 
+19: 00007FF72EDBCCF4 
+20: 00007FF72EDC22BE 
+21: 00007FF72EDC276E 
+22: 00007FF72EDCE4FF 
+23: 00007FF72EDC5A48 
+24: 00007FF72EDBC93D 
+25: 00007FF72EDBCEB1 
+26: 00007FF72EDBCD41 
+27: 00007FF72EDC22BE 
+28: 00007FF72EDCAEF7 
+29: 00007FF72EDC84C9 
+30: 00007FF72EDBCCF4 
+31: 00007FF72EDC22BE 
+32: 00007FF72EDC276E 
+33: 00007FF72EDCE4FF 
+34: 00007FF72EDC5A48 
+35: 00007FF72EDC4D47 
+36: 00007FF72EDC646A 
+37: 00007FF72EDB790D 
+38: 00007FF72EDCB45D 
+39: 00007FF72EDB097C 
+40: 00007FF72F152E40 
+41: 00007FF72F158964 
+42: 00007FF72F1D249D 
+43: 00007FF72F1D21F4 
+44: 00007FF72E5EFBED 
+45: 00007FF72E5F0124 
+46: 00007FF6CF1CFA64 
+[?25h
+^C^C

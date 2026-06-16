@@ -1,0 +1,88 @@
+# Credenciales — nunca comitear
+.env
+.env.dev
+.env.local
+.env.production
+frontend/.env.development.local
+
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Build
+dist/
+build/
+.next/
+out/
+
+# Prisma
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.tsbuildinfo
+.eslintcache
+
+# Backups (no subir al repo — quedan en el servidor)
+backups/*.sql.gz
+
+# Logs (los genera PM2 en el servidor)
+logs/*.log
+logs/*.log.*
+
+# PM2
+.pm2/
+
+# Certificados SSL (quedan en el servidor)
+nginx/ssl/
+
+# Binarios locales
+ngrok.exe
+*.exe
+
+# Datos de cliente / documentos de trabajo (no van al repo)
+Up/
+P4_OKR_Tree v2.html
+
+# Archivos de configuración temporales de desarrollo (Windows-específicos)
+fe-dev.json
+pm2-frontend-tmp.config.js
+frontend-start.config.js
+
+# Scripts de ngrok locales
+start-ngrok.ps1
+
+# Artefactos de QA / screenshots de tests
+scripts/screenshots/
+
+# SQL de producción con credenciales o datos sensibles
+scripts/schema_prod.sql
+
+# SQL de parches ad-hoc (ya incorporados en las migraciones 074-077)
+scripts/fix_demo_org_plan.sql
+scripts/fix_fn_close_report.sql
+scripts/fix_v_areas_with_teams.sql
+
+# Estado en tiempo de ejecución del super-agent (se genera automáticamente)
+agent-state.json

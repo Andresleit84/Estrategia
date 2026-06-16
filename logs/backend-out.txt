@@ -1,0 +1,224 @@
+{"level":"info","msg":"Starting Nest application...","ctx":"NestFactory","ts":"2026-04-27T16:09:55.327Z"}
+{"level":"info","msg":"PassportModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.364Z"}
+{"level":"info","msg":"ThrottlerModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.366Z"}
+{"level":"info","msg":"ConfigHostModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.367Z"}
+{"level":"info","msg":"DiscoveryModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.368Z"}
+{"level":"info","msg":"ConfigModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.369Z"}
+{"level":"info","msg":"ScheduleModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.371Z"}
+{"level":"warn","msg":"SMTP not configured — email sending disabled. Set SMTP_HOST to enable.","ctx":"EmailService","ts":"2026-04-27T16:09:55.372Z"}
+{"level":"info","msg":"RedisModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.374Z"}
+{"level":"info","msg":"EmailModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.375Z"}
+{"level":"info","msg":"JwtModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.376Z"}
+{"level":"info","msg":"DatabaseModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.377Z"}
+{"level":"info","msg":"JwtModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.378Z"}
+{"level":"info","msg":"AppModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.379Z"}
+{"level":"info","msg":"HealthModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.383Z"}
+{"level":"info","msg":"NotificationsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.384Z"}
+{"level":"info","msg":"SystemModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.386Z"}
+{"level":"info","msg":"ReportsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.387Z"}
+{"level":"info","msg":"UsersModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.388Z"}
+{"level":"info","msg":"AiModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.390Z"}
+{"level":"info","msg":"ProblemsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.392Z"}
+{"level":"info","msg":"StrategicIntentsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.393Z"}
+{"level":"info","msg":"InitiativesModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.394Z"}
+{"level":"info","msg":"KeyResultsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.394Z"}
+{"level":"info","msg":"SprintsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.395Z"}
+{"level":"info","msg":"AdminModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.397Z"}
+{"level":"info","msg":"OrganizationsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.398Z"}
+{"level":"info","msg":"TeamsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.398Z"}
+{"level":"info","msg":"CheckInsModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.399Z"}
+{"level":"info","msg":"ObjectivesModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.400Z"}
+{"level":"info","msg":"CyclesModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.401Z"}
+{"level":"info","msg":"AuthModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.401Z"}
+{"level":"info","msg":"McpModule dependencies initialized","ctx":"InstanceLoader","ts":"2026-04-27T16:09:55.402Z"}
+{"level":"info","msg":"NotificationsGateway subscribed to the \"ping\" message","ctx":"WebSocketsController","ts":"2026-04-27T16:09:55.443Z"}
+{"level":"info","msg":"AuthController {/api/v1/auth}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.448Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/register, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.452Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/login, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.454Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/refresh, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.455Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/switch-org, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.456Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/logout, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.458Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/logout-all, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.459Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/me, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.460Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/invitation, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.462Z"}
+{"level":"info","msg":"Mapped {/api/v1/auth/accept-invitation, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.463Z"}
+{"level":"info","msg":"OrganizationsController {/api/v1/organizations}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.465Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.466Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.467Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/members, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.468Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/team-tree, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.469Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/invitations, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.471Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/invitations, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.472Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/invitations/:id/resend, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.473Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/members/:userId/role, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.475Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/members/:userId/reset-password, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.476Z"}
+{"level":"info","msg":"Mapped {/api/v1/organizations/me/members/:userId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.477Z"}
+{"level":"info","msg":"TeamsController {/api/v1/teams}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.478Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.479Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.480Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams/:id/members, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.481Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams/:id/members, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.482Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams/:id/members/:userId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.483Z"}
+{"level":"info","msg":"CyclesController {/api/v1/cycles}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.484Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.485Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/active, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.486Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.487Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.488Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.489Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id/activate, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.490Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id/close, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.491Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id/score, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.492Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id/incomplete, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.493Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:id/rollover, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.494Z"}
+{"level":"info","msg":"AiController {/api/v1/ai}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.495Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/okr-coach, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.497Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/checkin-assistant, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.497Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/risk-sentinel, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.498Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/executive-briefing, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.499Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/alignment-audit, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.500Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/strategy-advisor, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.501Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/suggest-strategic-intents, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.502Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/briefings, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.503Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/briefings/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.504Z"}
+{"level":"info","msg":"Mapped {/api/v1/ai/conversations, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.505Z"}
+{"level":"info","msg":"ObjectivesController {/api/v1/objectives}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.506Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.507Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/alignment, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.508Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/tree, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.509Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.510Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:id/key-results, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.511Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.512Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.514Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.515Z"}
+{"level":"info","msg":"KeyResultsController {/api/v1}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.516Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:objId/key-results/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.517Z"}
+{"level":"info","msg":"Mapped {/api/v1/objectives/:objId/key-results, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.518Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.519Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.520Z"}
+{"level":"info","msg":"HealthController {/api/v1/health}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.521Z"}
+{"level":"info","msg":"Mapped {/api/v1/health, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.522Z"}
+{"level":"info","msg":"McpController {/api/v1/mcp}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.523Z"}
+{"level":"info","msg":"Mapped {/api/v1/mcp/tools, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.524Z"}
+{"level":"info","msg":"Mapped {/api/v1/mcp, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.525Z"}
+{"level":"info","msg":"ProblemsController {/api/v1/problems}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.526Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.527Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.528Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.530Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.532Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.533Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems/:id/intents/:intentId, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.534Z"}
+{"level":"info","msg":"Mapped {/api/v1/problems/:id/intents/:intentId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.535Z"}
+{"level":"info","msg":"StrategicIntentsController {/api/v1/strategic-intents}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.536Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.537Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.538Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.540Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.541Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.542Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents/:id/problems, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.543Z"}
+{"level":"info","msg":"Mapped {/api/v1/strategic-intents/:id/objectives, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.543Z"}
+{"level":"info","msg":"CheckInsController {/api/v1}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.544Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:krId/check-ins, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.545Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:krId/check-ins, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.547Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:krId/predict, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.548Z"}
+{"level":"info","msg":"Mapped {/api/v1/at-risk-krs, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.548Z"}
+{"level":"info","msg":"Mapped {/api/v1/cadence-dashboard, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.549Z"}
+{"level":"info","msg":"Mapped {/api/v1/notifications, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.550Z"}
+{"level":"info","msg":"Mapped {/api/v1/notifications/:id/read, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.551Z"}
+{"level":"info","msg":"Mapped {/api/v1/notifications/read-all, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.552Z"}
+{"level":"info","msg":"InitiativesController {/api/v1/initiatives}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.553Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.554Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/overdue-milestones, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.554Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.556Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.557Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.558Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.559Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/health, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.560Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/key-results/:krId, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.561Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/key-results/:krId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.562Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/milestones, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.563Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/milestones, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.565Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/milestones/:milestoneId, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.566Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/milestones/:milestoneId/complete, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.567Z"}
+{"level":"info","msg":"Mapped {/api/v1/initiatives/:id/milestones/:milestoneId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.568Z"}
+{"level":"info","msg":"KrInitiativesController {/api/v1/key-results}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.569Z"}
+{"level":"info","msg":"Mapped {/api/v1/key-results/:krId/initiatives, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.570Z"}
+{"level":"info","msg":"SprintsController {/api/v1/sprints}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.571Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.572Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.573Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/active, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.574Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.574Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.576Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id/activate, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.577Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id/close, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.579Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id/okr-impact, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.580Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id/krs, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.581Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id/krs/:krId, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.582Z"}
+{"level":"info","msg":"Mapped {/api/v1/sprints/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.583Z"}
+{"level":"info","msg":"CycleSprintsController {/api/v1/cycles/:cycleId/sprints}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.584Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:cycleId/sprints/timeline, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.585Z"}
+{"level":"info","msg":"Mapped {/api/v1/cycles/:cycleId/sprints/burnup, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.586Z"}
+{"level":"info","msg":"TeamVelocityController {/api/v1/teams/:teamId/velocity}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.587Z"}
+{"level":"info","msg":"Mapped {/api/v1/teams/:teamId/velocity, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.588Z"}
+{"level":"info","msg":"ReportsController {/api/v1/reports}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.589Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/risk-dashboard, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.590Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/executive-briefing, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.590Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/alignment, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.591Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/executive-dashboard, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.592Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/cycle-health, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.593Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/team-health, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.594Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/portfolio, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.595Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/weekly-trend, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.596Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/upcoming-milestones, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.597Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/activity-feed, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.598Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/close-report/:cycleId, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.600Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/export-csv/:cycleId, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.601Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/export-pdf/:cycleId, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.602Z"}
+{"level":"info","msg":"Mapped {/api/v1/reports/security-audit, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.603Z"}
+{"level":"info","msg":"SystemController {/api/v1/system}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.604Z"}
+{"level":"info","msg":"Mapped {/api/v1/system/status, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.606Z"}
+{"level":"info","msg":"Mapped {/api/v1/system/setup-status, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.607Z"}
+{"level":"info","msg":"AdminController {/api/v1/admin}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.608Z"}
+{"level":"info","msg":"Mapped {/api/v1/admin/organizations, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.610Z"}
+{"level":"info","msg":"Mapped {/api/v1/admin/organizations/:id, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.611Z"}
+{"level":"info","msg":"UsersController {/api/v1/me}:","ctx":"RoutesResolver","ts":"2026-04-27T16:09:55.612Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/profile, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.613Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/profile, PATCH} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.613Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/mfa, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.614Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/mfa/setup, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.615Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/mfa/enable, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.616Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/mfa/disable, POST} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.617Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/export-data, GET} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.618Z"}
+{"level":"info","msg":"Mapped {/api/v1/me/account, DELETE} route","ctx":"RouterExplorer","ts":"2026-04-27T16:09:55.619Z"}
+{"level":"info","msg":"Nest application successfully started","ctx":"NestApplication","ts":"2026-04-27T16:09:55.656Z"}
+OKR Backend running on port 3001
+{"level":"warn","msg":"POST /api/v1/ai/suggest-strategic-intents → 401: \"Unauthorized\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:09.325Z"}
+{"level":"warn","msg":"GET /strategy → 404: \"Cannot GET /strategy\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:43.524Z"}
+{"level":"warn","msg":"GET /favicon.ico → 404: \"Cannot GET /favicon.ico\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:46.322Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/%5Broot-of-the-server%5D__09lf.f~._.css → 404: \"Cannot GET /_next/static/chunks/%5Broot-of-the-server%5D__09lf.f~._.css\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.405Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_0553esy.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_0553esy.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.561Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.574Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_0p3wegg._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_0p3wegg._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.578Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.582Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.586Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_dist_115brz8._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_dist_115brz8._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.589Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/turbopack-_0p44nws._.js → 404: \"Cannot GET /_next/static/chunks/turbopack-_0p44nws._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.607Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_next_0vfycfl._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_next_0vfycfl._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.611Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_%40base-ui_react_esm_0nb93n4._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_%40base-ui_react_esm_0nb93n4._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.614Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_0ezz.e5._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_0ezz.e5._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.617Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_01kj6-7._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_01kj6-7._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.620Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/src_0d_-dgw._.js → 404: \"Cannot GET /_next/static/chunks/src_0d_-dgw._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.624Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_04fx2uu._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_04fx2uu._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.627Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/src_0_wy84t._.js → 404: \"Cannot GET /_next/static/chunks/src_0_wy84t._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.629Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_0gm24oi._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_0gm24oi._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:48.632Z"}
+{"level":"warn","msg":"GET /favicon.ico?favicon.0x3dzn~oxb6tn.ico → 404: \"Cannot GET /favicon.ico?favicon.0x3dzn~oxb6tn.ico\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:49.089Z"}
+{"level":"warn","msg":"GET /settings → 404: \"Cannot GET /settings\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:10:55.267Z"}
+{"level":"info","msg":"Nightly cron: marking stale KRs AT_RISK","ctx":"CheckInCronService","ts":"2026-04-27T16:10:55.634Z"}
+{"level":"info","msg":"Stale KRs processed for 10 organizations","ctx":"CheckInCronService","ts":"2026-04-27T16:10:56.375Z"}
+{"level":"warn","msg":"GET / → 404: \"Cannot GET /\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:03.119Z"}
+{"level":"warn","msg":"GET / → 404: \"Cannot GET /\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:07.035Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/%5Broot-of-the-server%5D__09lf.f~._.css → 404: \"Cannot GET /_next/static/chunks/%5Broot-of-the-server%5D__09lf.f~._.css\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:40.511Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/src_0x2rdre._.js → 404: \"Cannot GET /_next/static/chunks/src_0x2rdre._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:40.632Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_006zux.._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_006zux.._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:40.690Z"}
+{"level":"warn","msg":"GET /strategic → 404: \"Cannot GET /strategic\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:43.634Z"}
+{"level":"warn","msg":"GET /_next/static/chunks/node_modules_0fdy~lo._.js → 404: \"Cannot GET /_next/static/chunks/node_modules_0fdy~lo._.js\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:46.233Z"}
+{"level":"warn","msg":"GET /auth/login?from=%2Fstrategic → 404: \"Cannot GET /auth/login?from=%2Fstrategic\"","ctx":"AllExceptionsFilter","ts":"2026-04-27T16:11:50.292Z"}

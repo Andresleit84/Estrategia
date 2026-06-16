@@ -1,0 +1,46 @@
+
+FaseChecklist de entregables 
+(marcar al completar)ResponsableFecha objetivoEstadoNotasFase 1 — Definición Estratégica? Declaración de Apuesta Estratégica (Strategic Bet Statement(s)
+? Canvas de Lógica de Ejecución Estratégica (Execution Logic Canvas)
+? Tablero de OKRs Alineados (versión inicial) (ver miro)
+? Resumen de Alineación (acuerdos y decisiones clave)? No iniciado  
+
+
+? En curso  
+
+
+? ListoFase 2 — Despliegue y Validación? Mapa de Despliegue Estratégico
+? Matriz de Compromisos de Liderazgo (dueños/dependencias)
+? Blueprint de Gobernanza de Ejecución (cadencia/foros/decisiones)
+? Toolkit de Comunicación Estratégica
+? Marco de Priorización y Scoring de Iniciativas
+? Portafolio de Iniciativas Validado (secuencia/timing/confianza)? No iniciado  
+
+
+? En curso  
+
+
+
+? ListoFase 3 — Alineación Táctica de Ejecución? Playbook de Ejecución Táctica (rutinas/roles)
+? Tableros por Equipo (scoreboards)
+? Toolkit de Diseño de Reuniones y Cadencia
+? Marco de Retroalimentación de Ejecución (feedback loop)
+? Kit de Retrospectivas (evaluar/ajustar ciclos)? No iniciado  
+
+? En curso  
+
+
+? ListoFase 4 — Inspeccionar y Adaptar? Playbook de Madurez de Capacidades
+? Plan Integrado de Aprendizaje y Coaching (UNIVALL)
+? Toolkit de Sostenibilidad
+? Marco de Implementación de Bucles de Feedback
+? Plantillas de Tableros de Planes de Mejora? No iniciado
+  
+
+? En curso  
+
+
+? Listo
+Checklist de Entregables por Fase
+Versión: v5  |  Fecha: 2026-02-06
+

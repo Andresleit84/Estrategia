@@ -1,0 +1,83 @@
+  Qué está pidiendo Eric realmente
+
+  No está pidiendo más features. Está pidiendo tres cosas concretas:
+
+  1. Un demo con datos reales
+
+  El sistema existe pero está vacío. Eric no puede "ver" el valor porque no hay nada que ver. Quiere
+  entrar y encontrar: 50 OKRs, 30 épicas, 4 equipos, 7 directivos — todo conectado. Sin datos,
+  cualquier feature parece vacía.
+
+  2. Navegación de punta a punta (el "árbol")
+
+  Quiere hacer clic en una Intención Estratégica, ver sus OKRs anuales, hacer clic en uno, ver los
+  trimestrales, hacer clic, ver las épicas, clic, ver las historias. Una cadena de navegación continua
+   sin saltar entre módulos. Hoy el sistema tiene todos esos artefactos pero viven en páginas
+  separadas sin un hilo conductor visual.
+
+  3. Escenarios de negocio, no features sueltas
+
+  Quiere poder decirle a un cliente: "si eres PMO, esto es lo que puedes hacer aquí de punta a punta".
+   No "tenemos reportes, tenemos OKRs, tenemos check-ins" — sino un flujo que cuente una historia.
+
+  ---
+  Mi opinión honesta sobre el gap
+
+  El sistema tiene todas las piezas pero no el pegamento. Es como tener todos los ingredientes de un
+  plato sin haberlo cocinado. Específicamente:
+
+  Lo que existe pero no está conectado:
+  - Trazabilidad existe (/traceability) pero aparentemente no permite navegar hacia abajo haciendo
+  clic en cada nodo
+  - Reportes existen pero no hay un "pulso estratégico mensual" como flujo completo (llenar → colores
+  → plan de acción → PDF)
+  - Los agentes de IA existen pero Eric no sabe qué hacen porque nunca los vio trabajar con datos
+  reales
+
+  Lo que genuinamente no existe:
+  - Importación masiva de datos (Excel/CSV para cargar una estrategia existente)
+  - Integración con OneDrive/SharePoint para leer documentos de clientes
+  - Diagnóstico de madurez digital (nuevo módulo completo)
+  - RTN como flujo estructurado
+
+  ---
+  Prioridades reales según la urgencia de Eric
+
+  Tienes una semana antes de la reunión con el cliente potencial. Aquí lo que importa en orden:
+
+  Esta semana (para el demo):
+  1. Llenar el sistema con datos de Caja Morelia o datos ficticios realistas — 4 niveles completos, 7
+  usuarios con roles diferentes, varios ciclos
+  2. Hacer que desde /traceability (o una vista nueva) puedas hacer clic en cualquier nodo y navegar
+  hacia abajo hasta la última historia. Ese es el "WOW" que Eric repitió 6 veces
+  3. Correr el Executive Briefer y el Risk Sentinel con esos datos para que los reportes muestren
+  análisis real
+
+  Semana 2-3 (primer cliente):
+  1. Importación por CSV/Excel para OKRs y épicas — sin esto cargar un cliente real es insostenible
+  2. Pulso estratégico como flujo completo (hoy existe el reporte pero no el proceso de llenado con
+  colores y plan de acción)
+
+  Después (diferenciadores):
+  1. Ingesta de documentos vía OneDrive
+  2. Diagnóstico de madurez digital
+  3. RTN como módulo
+
+  ---
+  Lo que le deberías decir a Eric mañana
+
+  Que en la reunión vas a mostrar un solo escenario de negocio de punta a punta:
+
+  ▎ "Soy directora de estrategia. Entro al sistema, veo mi árbol de alineación completo de 3 años
+  ▎ hasta este trimestre, hago clic en cualquier objetivo y veo quién es responsable, qué épicas lo
+  ▎ mueven y qué % va. Corro el pulso estratégico mensual, sale el análisis de IA, lo edito, lo
+  ▎ exporto a PDF."
+
+  Solo ese flujo, bien ejecutado con datos reales, es suficiente para el cliente del viernes.
+
+  ---
+  La pregunta clave antes de construir
+
+  ¿La página de trazabilidad (/traceability) actualmente permite navegar hacia abajo haciendo clic en
+  los nodos del árbol? ¿O solo muestra el árbol estático? Eso determina si necesitas construir algo
+  nuevo esta semana o solo llenar datos.

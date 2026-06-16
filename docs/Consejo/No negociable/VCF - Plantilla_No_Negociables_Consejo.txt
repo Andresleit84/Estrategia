@@ -1,0 +1,11 @@
+Plantilla: No Negociables del Consejo (Guardrails de Ejecución)
+Uso: definir límites no transgredibles que guían la estrategia y activan escalamiento inmediato. Esta hoja se revisa al inicio del ciclo anual, se valida en RTN trimestral y se monitorea mensualmente en Pulso.
+
+Organización/Consejo: ________________________   Periodo: ____________   Versión: ____   Fecha: ____/____/______
+Aprobado por (Presidente del Consejo): ________________________   Secretario: ________________________
+
+CategoríaNo Negociable (enunciado claro)Umbral / CriterioSeñal (KRI/KPI) + FuenteFrecuencia de monitoreoTrigger de escalamiento (cuándo sube al Consejo)Dueño ejecutivoAcción del Consejo / Evidencia requerida                                                
+Reglas rápidas:
+• Un No Negociable es un guardrail: no se rompe por conveniencia del trimestre. Si se propone cambiarlo, debe ser decisión explícita del Consejo.
+• Cada No Negociable debe tener: (a) umbral observable, (b) señal y fuente, (c) trigger de escalamiento, (d) dueño ejecutivo.
+• En el Board Packet mensual, mostrar estado (V/A/R) y tendencia de las señales asociadas; discutir sólo excepciones y decisiones.
