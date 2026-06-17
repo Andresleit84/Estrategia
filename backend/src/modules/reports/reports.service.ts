@@ -242,105 +242,34 @@ export class ReportsService {
   }
 
   async getCycleProjection(orgId: string) {
-    const [cycleRow, objectivesRows, trendRows] = await Promise.all([
-      this.db.queryOne<{
-        id: string; name: string; start_date: string; end_date: string;
-        days_elapsed: number; days_remaining: number; days_total: number;
-        cycle_position_pct: number;
-      }>(
-        `SELECT id, name, start_date, end_date,
-          GREATEST((CURRENT_DATE - start_date::date)::int, 0) AS days_elapsed,
-          GREATEST((end_date::date - CURRENT_DATE)::int, 0) AS days_remaining,
-          (end_date::date - start_date::date)::int AS days_total,
-          ROUND(LEAST(
-            ((CURRENT_DATE - start_date::date)::float / NULLIF((end_date::date - start_date::date), 0)) * 100,
-            100
-          ))::int AS cycle_position_pct
-        FROM cycles WHERE organization_id = $1 AND status = 'ACTIVE' LIMIT 1`,
-        [orgId],
-      ),
-      this.db.query<{
-        id: string; code: string; title: string; level: string; status: string;
-        progress: number; avg_confidence: number;
-      }>(
-        `SELECT o.id, o.code, o.title, o.level, o.status,
-          COALESCE(fn_calculate_objective_progress(o.id), 0)::int AS progress,
-          COALESCE(AVG(kr.confidence), 0)::float AS avg_confidence
-        FROM objectives o
-        LEFT JOIN key_results kr ON kr.objective_id = o.id AND kr.deleted_at IS NULL
-        WHERE o.organization_id = $1
-          AND o.deleted_at IS NULL
-          AND o.cycle_id = (SELECT id FROM cycles WHERE organization_id = $1 AND status = 'ACTIVE' LIMIT 1)
-        GROUP BY o.id, o.code, o.title, o.level, o.status
-        ORDER BY
-          CASE o.level WHEN 'COMPANY' THEN 1 WHEN 'AREA' THEN 2 WHEN 'TEAM' THEN 3 ELSE 4 END,
-          o.code NULLS LAST`,
-        [orgId],
-      ),
-      this.db.query<{ week_number: number; avg_progress: number }>(
-        `SELECT week_number, avg_progress
-        FROM v_weekly_trend
-        WHERE cycle_id = (SELECT id FROM cycles WHERE organization_id = $1 AND status = 'ACTIVE' LIMIT 1)
-        ORDER BY week_number DESC LIMIT 6`,
-        [orgId],
-      ),
-    ]);
-
-    if (!cycleRow) return null;
-
-    const cyclePct = Number(cycleRow.cycle_position_pct);
-    const expectedProgress = cyclePct;
-
-    const actualProgress = objectivesRows.length
-      ? Math.round(objectivesRows.reduce((s, o) => s + Number(o.progress), 0) / objectivesRows.length)
-      : 0;
-
-    const gap = actualProgress - expectedProgress;
-
-    // Weekly velocity: sort ASC, compute deltas between consecutive weeks, average
-    const trendAsc = [...trendRows].sort((a, b) => a.week_number - b.week_number);
-    let weeklyVelocity = 0;
-    if (trendAsc.length >= 2) {
-      const deltas: number[] = [];
-      for (let i = 1; i < trendAsc.length; i++) {
-        deltas.push(Number(trendAsc[i].avg_progress) - Number(trendAsc[i - 1].avg_progress));
-      }
-      weeklyVelocity = Math.round((deltas.reduce((s, d) => s + d, 0) / deltas.length) * 10) / 10;
-    }
-
-    const weeksRemaining = Number(cycleRow.days_remaining) / 7;
-    const projectedFinal = Math.min(
-      Math.round(actualProgress + weeksRemaining * Math.max(weeklyVelocity, 0)),
-      100,
+    // Database-First: Toda la lógica está en fn_get_cycle_projection() en PostgreSQL
+    const result = await this.db.queryOne<{
+      cycle_id: string; cycle_name: string; days_remaining: number;
+      expected_progress: number; actual_progress: number; progress_gap: number;
+      weekly_velocity: number; weeks_remaining: number; projected_final: number;
+      objectives_json: any;
+    }>(
+      `SELECT * FROM fn_get_cycle_projection(
+        (SELECT id FROM cycles WHERE organization_id = $1 AND status = 'ACTIVE' LIMIT 1),
+        $1
+      )`,
+      [orgId],
     );
 
-    const objectives = objectivesRows.map((o) => {
-      const progress = Number(o.progress);
-      const confidence = Number(o.avg_confidence);
-      let forecastStatus: 'on_track' | 'at_risk' | 'critical';
-      if (progress >= expectedProgress * 0.75 && confidence >= 0.5) forecastStatus = 'on_track';
-      else if (progress >= expectedProgress * 0.45 || confidence >= 0.4) forecastStatus = 'at_risk';
-      else forecastStatus = 'critical';
-      return { ...o, progress, avg_confidence: confidence, forecastStatus, obj_gap: Math.round(progress - expectedProgress) };
-    });
+    if (!result) return null;
 
     return {
       cycle: {
-        id: cycleRow.id,
-        name: cycleRow.name,
-        start_date: cycleRow.start_date,
-        end_date: cycleRow.end_date,
-        days_elapsed: Number(cycleRow.days_elapsed),
-        days_remaining: Number(cycleRow.days_remaining),
-        days_total: Number(cycleRow.days_total),
-        cycle_position_pct: cyclePct,
+        id: result.cycle_id,
+        name: result.cycle_name,
+        days_remaining: result.days_remaining,
       },
-      actual_progress: actualProgress,
-      expected_progress: Math.round(expectedProgress),
-      gap: Math.round(gap),
-      weekly_velocity: weeklyVelocity,
-      projected_final_progress: projectedFinal,
-      objectives,
+      actual_progress: result.actual_progress,
+      expected_progress: result.expected_progress,
+      gap: result.progress_gap,
+      weekly_velocity: result.weekly_velocity,
+      projected_final_progress: result.projected_final,
+      objectives: result.objectives_json || [],
     };
   }
 

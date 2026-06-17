@@ -233,39 +233,14 @@ export class SprintsService {
       [dto.cycle_id, dto.team_id],
     );
 
-    const cycleEnd   = new Date(cycle.end_date);
-    const dayMs      = 86_400_000;
-    const sprintDays = dto.sprint_length_weeks * 7;
-    const startFrom  = dto.start_from ? new Date(dto.start_from) : new Date(cycle.start_date);
+    // Database-First: Genera todos los sprints en una sola transacción SQL
+    const sprintCount = dto.sprint_count ?? 4;
+    const startDate   = dto.start_from ?? cycle.start_date;
 
-    let current = new Date(startFrom);
-    let num     = 1;
-    const MAX_SPRINTS = 52;
-
-    while (current < cycleEnd && num <= MAX_SPRINTS) {
-      const endMs    = current.getTime() + sprintDays * dayMs - dayMs;
-      const sprintEnd = new Date(Math.min(endMs, cycleEnd.getTime()));
-
-      try {
-        const rows = await this.db.query<{ p_sprint_id: string }>(
-          `CALL sp_create_sprint($1,$2,$3,$4,$5,$6,$7,$8,$9,NULL)`,
-          [
-            orgId, dto.cycle_id, dto.team_id,
-            `Sprint ${num}`, null,
-            current.toISOString().split('T')[0],
-            sprintEnd.toISOString().split('T')[0],
-            dto.planned_velocity ?? 0,
-            userId,
-          ],
-        );
-        if (!rows[0]?.p_sprint_id) break;
-      } catch {
-        break;
-      }
-
-      current = new Date(sprintEnd.getTime() + dayMs);
-      num++;
-    }
+    await this.db.execute(
+      `CALL sp_generate_sprints($1, $2, $3, $4)`,
+      [dto.cycle_id, dto.team_id, sprintCount, userId],
+    );
 
     return this.list(orgId, { cycle_id: dto.cycle_id, team_id: dto.team_id });
   }
