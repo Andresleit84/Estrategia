@@ -48,7 +48,7 @@ case "$MODE" in
       if [[ "$already_applied" == "0" ]]; then
         log "Aplicando: $filename"
         psql_run -f "$migration_file" -q
-        psql_run -c "INSERT INTO _sql_migrations (filename) VALUES ('$filename');" -q
+        psql_run -c "INSERT INTO _sql_migrations (filename) VALUES ('$filename') ON CONFLICT (filename) DO NOTHING;" -q
         log "OK: $filename"
         APPLIED=$((APPLIED + 1))
       else
