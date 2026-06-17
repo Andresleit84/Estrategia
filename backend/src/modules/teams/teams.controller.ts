@@ -23,6 +23,14 @@ export class TeamsController {
     return this.teams.create(user.organization_id, dto, user.user_id);
   }
 
+  @Get(':id')
+  findOne(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.teams.findOne(id, user.organization_id);
+  }
+
   @Get(':id/members')
   getMembers(
     @CurrentUser() user: UserSession,
