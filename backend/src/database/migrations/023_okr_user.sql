@@ -1,22 +1,16 @@
--- Migration 023: Create okr_user (non-superuser) for RLS enforcement
--- APPLIED 2026-04-28 against Estrategia_dev and Estrategia
--- .env and .env.dev updated to use okr_user
+-- Migration 023: Ensure okr_user permissions (idempotent)
+-- okr_user is created during installation with the password from .env
+-- This migration only ensures grants are in place.
 
--- Create role (idempotent) — run as postgres superuser
+-- Grant connect on production DB (idempotent)
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'okr_user') THEN
-    CREATE ROLE okr_user WITH LOGIN PASSWORD 'SEE_ENV_FILE';
-  ELSE
-    ALTER ROLE okr_user WITH PASSWORD 'SEE_ENV_FILE';
+  IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'okr_db') THEN
+    EXECUTE 'GRANT CONNECT ON DATABASE okr_db TO okr_user';
   END IF;
 END $$;
 
--- Run from postgres DB:
-GRANT CONNECT ON DATABASE "Estrategia_dev" TO okr_user;
-GRANT CONNECT ON DATABASE "Estrategia" TO okr_user;
-
--- Run from within each target DB:
+-- Permissions on schema
 GRANT USAGE ON SCHEMA public TO okr_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO okr_user;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO okr_user;
