@@ -110,7 +110,7 @@ export class CheckInsService {
          o.title                                                    AS obj_title,
          COALESCE(obj_owner.name, '')                              AS obj_owner_name,
          org.name                                                   AS org_name,
-         COALESCE(org.parameters->'notifications'->>'telegram_chat_id', '') AS org_chat_id,
+         COALESCE(org.settings->'notifications'->>'telegram_chat_id', '') AS org_chat_id,
          fn_kr_forecast(kr.id)                                     AS forecast
        FROM key_results kr
        JOIN objectives o   ON o.id  = kr.objective_id
