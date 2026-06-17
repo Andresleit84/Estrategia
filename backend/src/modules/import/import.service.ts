@@ -381,7 +381,6 @@ Valores válidos:
     organizationId: string, userId: string, data: ImportData,
   ): Promise<{ success: boolean; message: string }> {
 
-    // Disable effective limits during bulk import (set high enough to never trigger)
     await this.db.query(
       `UPDATE organizations SET parameters = COALESCE(parameters, '{}'::jsonb) || $1::jsonb WHERE id=$2`,
       [JSON.stringify({ max_objectives_per_level: 999, max_krs_per_objective: 999 }), organizationId],

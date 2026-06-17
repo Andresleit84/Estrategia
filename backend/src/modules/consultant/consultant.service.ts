@@ -133,7 +133,6 @@ export class ConsultantService {
       [consultantEmail, orgId, enabled],
     );
 
-    // Write the feature flag to the org's parameters so the client UI can read it
     await this.db.execute(
       `UPDATE organizations
           SET parameters = jsonb_set(

@@ -497,7 +497,6 @@ export class AiCronService {
     const now     = new Date().toISOString();
     const entry   = JSON.stringify({ sent_at: now, channels });
 
-    // Atomic: set timestamp + prepend log entry, keep last 5
     await this.db.execute(
       `UPDATE organizations
           SET parameters = parameters
@@ -532,21 +531,22 @@ export class AiCronService {
   // ── DB helpers ─────────────────────────────────────────────────────────────
 
   private activeOrgs(specificOrgId?: string): Promise<OrgInfo[]> {
-    const filter = specificOrgId ? `AND c.organization_id = '${specificOrgId}'` : '';
+    const params: string[] = specificOrgId ? [specificOrgId] : [];
+    const filter = specificOrgId ? `AND c.organization_id = $1` : '';
     return this.db.query<OrgInfo>(
       `SELECT DISTINCT ON (c.organization_id)
               c.organization_id,
               o.name AS org_name,
               u.email AS owner_email,
               u.id    AS owner_id,
-              COALESCE(o.settings -> 'notifications', '{}'::jsonb) AS notif_config,
+              COALESCE(o.parameters -> 'notifications', '{}'::jsonb) AS notif_config,
               jsonb_build_object(
-                'risk_sentinel',     o.settings->>'notif_sent_risk_sentinel',
-                'executive_briefer', o.settings->>'notif_sent_executive_briefer',
-                'checkin_reminder',  o.settings->>'notif_sent_checkin_reminder',
-                'cycle_closure',     o.settings->>'notif_sent_cycle_closure',
-                'agreement_status',  o.settings->>'notif_sent_agreement_status',
-                'personal_briefing', o.settings->>'notif_sent_personal_briefing'
+                'risk_sentinel',     o.parameters->>'notif_sent_risk_sentinel',
+                'executive_briefer', o.parameters->>'notif_sent_executive_briefer',
+                'checkin_reminder',  o.parameters->>'notif_sent_checkin_reminder',
+                'cycle_closure',     o.parameters->>'notif_sent_cycle_closure',
+                'agreement_status',  o.parameters->>'notif_sent_agreement_status',
+                'personal_briefing', o.parameters->>'notif_sent_personal_briefing'
               ) AS notif_sent
          FROM cycles c
          JOIN organizations o ON o.id = c.organization_id
@@ -556,7 +556,7 @@ export class AiCronService {
         WHERE c.status = 'ACTIVE'
           AND o.deleted_at IS NULL
           ${filter}`,
-      [],
+      params,
     );
   }
 

@@ -126,40 +126,40 @@ export class DemoService {
     await this.db.execute(
       `DELETE FROM problem_intents WHERE problem_id IN (SELECT id FROM problems WHERE organization_id = $1)`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete problem_intents for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM strategic_intents WHERE organization_id = $1`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete strategic_intents for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM problems WHERE organization_id = $1`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete problems for org=${organizationId}`, err));
     // Limpiar backlog items e iniciativas del ciclo (demo completo incluye backlog)
     await this.db.execute(
       `DELETE FROM backlog_items WHERE organization_id = $1`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete backlog_items for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM agreement_backlog_items WHERE agreement_id IN (SELECT id FROM agreements WHERE organization_id = $1)`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete agreement_backlog_items for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM milestones WHERE initiative_id IN (SELECT id FROM initiatives WHERE organization_id = $1)`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete milestones for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM initiative_key_results WHERE initiative_id IN (SELECT id FROM initiatives WHERE organization_id = $1)`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete initiative_key_results for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM initiative_areas WHERE initiative_id IN (SELECT id FROM initiatives WHERE organization_id = $1)`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete initiative_areas for org=${organizationId}`, err));
     await this.db.execute(
       `DELETE FROM initiatives WHERE organization_id = $1`,
       [organizationId],
-    ).catch(() => {});
+    ).catch(err => this.logger.error(`Failed to delete initiatives for org=${organizationId}`, err));
 
     // Soft-delete objectives del ciclo (triggers y cascadas manejan KRs y check-ins)
     const result = await this.db.query<{ count: string }>(

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { DbService } from '../../database/db.service';
 import { NotificationsGateway } from '../../common/notifications/notifications.gateway';
 import { RedisService } from '../../common/redis/redis.service';
@@ -21,6 +21,8 @@ interface ForecastTelegramData {
 
 @Injectable()
 export class CheckInsService {
+  private readonly logger = new Logger(CheckInsService.name);
+
   constructor(
     private readonly db: DbService,
     private readonly redis: RedisService,
@@ -68,11 +70,15 @@ export class CheckInsService {
         this.notifications?.emitToOrg(orgRow.organization_id, 'checkin:created', {
           kr_id: krId, user_id: userId, ts: new Date().toISOString(),
         });
-        this.redis.delPattern(`reports:*:${orgRow.organization_id}:*`).catch(() => {});
+        this.redis.delPattern(`reports:*:${orgRow.organization_id}:*`).catch((err) => {
+          this.logger.warn(`Failed to invalidate report cache for org ${orgRow.organization_id}`, err);
+        });
 
         // Forecast: call procedure, check if a new notification was created, and if so send Telegram
         setImmediate(() => {
-          this.handleForecastNotification(krId, orgRow.organization_id).catch(() => {});
+          this.handleForecastNotification(krId, orgRow.organization_id).catch((err) => {
+            this.logger.error(`Failed to handle forecast notification for KR ${krId}`, err);
+          });
         });
       }
 
@@ -110,7 +116,7 @@ export class CheckInsService {
          o.title                                                    AS obj_title,
          COALESCE(obj_owner.name, '')                              AS obj_owner_name,
          org.name                                                   AS org_name,
-         COALESCE(org.settings->'notifications'->>'telegram_chat_id', '') AS org_chat_id,
+         COALESCE(org.parameters->'notifications'->>'telegram_chat_id', '') AS org_chat_id,
          fn_kr_forecast(kr.id)                                     AS forecast
        FROM key_results kr
        JOIN objectives o   ON o.id  = kr.objective_id

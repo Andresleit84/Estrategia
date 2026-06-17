@@ -2,6 +2,7 @@ import {
   Controller, Post, Body, Req, Res, UseGuards, HttpCode, Get, Query,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
@@ -22,9 +23,10 @@ class TrialRegisterDto {
 }
 
 function cookieOpts(maxAge = 30 * 24 * 60 * 60 * 1000) {
+  const isSecure = process.env.NODE_ENV === 'production';
   return {
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE !== 'false' && process.env.NODE_ENV === 'production',
+    secure: isSecure && process.env.COOKIE_SECURE !== 'false',
     sameSite: 'strict' as const,
     path: '/',
     maxAge,
@@ -39,6 +41,7 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @Public()
+  @Throttle({ auth: { limit: 3, ttl: 3_600_000 } })
   @Post('trial')
   @HttpCode(201)
   async registerTrial(@Body() dto: TrialRegisterDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -51,6 +54,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @Post('register')
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const { accessToken, refreshToken, user } = await this.auth.register(dto);
@@ -60,6 +64,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
@@ -143,6 +148,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @Post('forgot-password')
   @HttpCode(200)
   async forgotPassword(@Body() body: { email: string }) {
@@ -158,6 +164,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @Post('reset-password')
   @HttpCode(200)
   async resetPassword(
@@ -174,6 +181,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 10, ttl: 3_600_000 } })
   @Post('accept-invitation')
   async acceptInvitation(
     @Body() body: { token: string; name: string; password: string },

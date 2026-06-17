@@ -1,5 +1,5 @@
 import {
-  Injectable, NotFoundException, BadRequestException,
+  Injectable, NotFoundException, BadRequestException, InternalServerErrorException,
 } from '@nestjs/common';
 import { DbService } from '../../database/db.service';
 import { CreateSprintDto } from './dto/create-sprint.dto';
@@ -24,7 +24,7 @@ function mapDbError(err: unknown): never {
   if (code === '23503') throw new BadRequestException('Referencia inválida');
   if (code === '23505') throw new BadRequestException('Ya existe un registro con esos datos');
   if (code === '23514') throw new BadRequestException(`Valor no permitido: ${msg}`);
-  throw err;
+  throw new InternalServerErrorException();
 }
 
 @Injectable()

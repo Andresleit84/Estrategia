@@ -128,23 +128,22 @@ export class OrganizationsService {
   }
 
   async getParameters(orgId: string) {
-    const row = await this.db.queryOne<{ settings: Record<string, unknown>; organization_id: string }>(
-      `SELECT id as organization_id, settings FROM organizations WHERE id = $1 AND deleted_at IS NULL`,
+    const row = await this.db.queryOne<{ parameters: Record<string, unknown>; organization_id: string }>(
+      `SELECT id as organization_id, parameters FROM organizations WHERE id = $1 AND deleted_at IS NULL`,
       [orgId],
     );
     if (!row) throw new NotFoundException('Organización no encontrada');
-    const params = (row.settings ?? {}) as Record<string, unknown>;
-    // Never expose SMTP password in the response
+    const params = (row.parameters ?? {}) as Record<string, unknown>;
     if (params.smtp_pass) params.smtp_pass = '***';
     return { organization_id: row.organization_id, ...params };
   }
 
   private async getOrgSmtp(orgId: string): Promise<SmtpConfig | undefined> {
-    const row = await this.db.queryOne<{ settings: Record<string, unknown> }>(
-      `SELECT settings FROM organizations WHERE id = $1 AND deleted_at IS NULL`,
+    const row = await this.db.queryOne<{ parameters: Record<string, unknown> }>(
+      `SELECT parameters FROM organizations WHERE id = $1 AND deleted_at IS NULL`,
       [orgId],
     );
-    const p = row?.settings as Record<string, unknown> | undefined;
+    const p = row?.parameters as Record<string, unknown> | undefined;
     if (!p?.smtp_host) return undefined;
     return {
       host: p.smtp_host as string,

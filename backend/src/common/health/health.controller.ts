@@ -29,9 +29,4 @@ export class HealthController {
     };
   }
 
-  @Public()
-  @Get('debug-sentry')
-  debugSentry() {
-    throw new Error('🧪 Sentry Test Error - Este es un error de prueba para verificar que Sentry está capturando correctamente');
-  }
 }
