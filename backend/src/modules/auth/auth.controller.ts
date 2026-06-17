@@ -21,13 +21,17 @@ class TrialRegisterDto {
   @IsString() @MinLength(8) @MaxLength(128) password: string;
 }
 
-const COOKIE_OPTS = {
-  httpOnly: true,
-  secure: process.env.COOKIE_SECURE !== 'false' && process.env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
-  path: '/',
-  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-};
+function cookieOpts(maxAge = 30 * 24 * 60 * 60 * 1000) {
+  return {
+    httpOnly: true,
+    secure: process.env.COOKIE_SECURE !== 'false' && process.env.NODE_ENV === 'production',
+    sameSite: 'strict' as const,
+    path: '/',
+    maxAge,
+  };
+}
+const ACCESS_TTL = 15 * 60 * 1000;
+const REFRESH_TTL = 30 * 24 * 60 * 60 * 1000;
 
 @ApiTags('auth')
 @Controller('auth')
@@ -41,8 +45,8 @@ export class AuthController {
     const ip = req.ip ?? '';
     const deviceInfo = (req.headers['user-agent'] as string) ?? '';
     const { accessToken, refreshToken, user } = await this.auth.registerTrial(dto, ip, deviceInfo);
-    res.cookie('access_token', accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user };
   }
 
@@ -50,8 +54,8 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const { accessToken, refreshToken, user } = await this.auth.register(dto);
-    res.cookie('access_token', accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user };
   }
 
@@ -65,8 +69,8 @@ export class AuthController {
     const deviceInfo = req.headers['user-agent'] ?? '';
 
     const { accessToken, refreshToken } = await this.auth.login(user, ip, deviceInfo);
-    res.cookie('access_token', accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user };
   }
 
@@ -80,8 +84,8 @@ export class AuthController {
     const result = await this.auth.refresh(rawToken, req.ip ?? '', req.headers['user-agent'] ?? '');
     if (!result) throw new UnauthorizedException('Token inválido o expirado');
 
-    res.cookie('access_token', result.accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', result.refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', result.accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', result.refreshToken, cookieOpts(REFRESH_TTL));
     return { ok: true };
   }
 
@@ -99,8 +103,8 @@ export class AuthController {
       req.ip ?? '',
       req.headers['user-agent'] ?? '',
     );
-    res.cookie('access_token', accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user: newUser };
   }
 
@@ -164,8 +168,8 @@ export class AuthController {
     const { accessToken, refreshToken, user } = await this.auth.consumeResetToken(
       body.token, body.newPassword, req.ip ?? '', req.headers['user-agent'] ?? '',
     );
-    res.cookie('access_token', accessToken, { ...COOKIE_OPTS, maxAge: 15 * 60 * 1000 });
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user };
   }
 
@@ -181,8 +185,8 @@ export class AuthController {
     const { accessToken, refreshToken, user } = await this.auth.acceptInvitation(
       body.token, body.name, body.password, ip, device,
     );
-    res.cookie('access_token',  accessToken,  COOKIE_OPTS);
-    res.cookie('refresh_token', refreshToken, COOKIE_OPTS);
+    res.cookie('access_token',  accessToken,  cookieOpts(ACCESS_TTL));
+    res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
     return { user };
   }
 }

@@ -17,10 +17,12 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3020,
+        COOKIE_SECURE: 'false',
       },
       env_production: {
         NODE_ENV: 'production',
         PORT: 3020,
+        COOKIE_SECURE: 'false',
       },
       error_file: '../logs/backend-error.log',
       out_file: '../logs/backend-out.log',
