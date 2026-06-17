@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const PUBLIC_PATHS = ['/auth/login', '/auth/register', '/design', '/onboarding'];
+const PUBLIC_PATHS = ['/auth', '/design', '/onboarding', '/pricing', '/terms', '/privacy'];
 const PUBLIC_EXACT = ['/']; // exact-match public paths
 
 export function proxy(req: NextRequest) {
