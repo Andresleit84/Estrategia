@@ -1,4 +1,4 @@
-﻿import { Injectable, NotFoundException } from '@nestjs/common';
+﻿import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { Response } from 'express';
 import { DbService } from '../../database/db.service';
 import { RedisService } from '../../common/redis/redis.service';
@@ -83,7 +83,7 @@ export class ReportsService {
       ? await this.db.queryOne<{ id: string; name: string }>(`SELECT id, name FROM cycles WHERE id = $1 AND organization_id = $2`, [cycleId, orgId])
       : await this.db.queryOne<{ id: string; name: string }>(`SELECT id, name FROM cycles WHERE organization_id = $1 AND status = 'ACTIVE' LIMIT 1`, [orgId]);
 
-    if (!cycle) return { error: 'No hay ciclo activo' };
+    if (!cycle) throw new UnprocessableEntityException('No hay ciclo activo');
 
     const [gaps] = await this.db.query<{ fn_get_alignment_gaps: unknown }>(
       `SELECT fn_get_alignment_gaps($1, $2)`, [cycle.id, orgId],
