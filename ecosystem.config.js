@@ -32,7 +32,7 @@ module.exports = {
     {
       name: 'okr-frontend',
       cwd: './frontend',
-      script: 'node_modules/.bin/next',
+      script: 'node_modules/next/dist/bin/next',
       args: 'start -p 3000',
       instances: 1,
       watch: false,
