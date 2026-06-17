@@ -18,10 +18,23 @@ if [[ -f "$PROJECT_DIR/.env" ]]; then
   set -a; source "$PROJECT_DIR/.env"; set +a
 fi
 
+# Usuario para bookkeeping (_sql_migrations): DB_USER (okr_user)
 PG_OPTS="-h ${DB_HOST:-localhost} -p ${DB_PORT:-5432} -U ${DB_USER} -d ${DB_NAME}"
+
+# Usuario para ejecutar los archivos SQL: DB_MIGRATE_USER (default: postgres superuser)
+# DDL como ALTER TABLE requiere el owner de las tablas; okr_user NO puede hacerlo.
+# Configura DB_MIGRATE_USER=postgres y DB_MIGRATE_PASSWORD=<pwd> en .env
+MIGRATE_USER="${DB_MIGRATE_USER:-${DB_USER}}"
+MIGRATE_PASSWORD="${DB_MIGRATE_PASSWORD:-${DB_PASSWORD}}"
+PG_MIGRATE_OPTS="-h ${DB_HOST:-localhost} -p ${DB_PORT:-5432} -U ${MIGRATE_USER} -d ${DB_NAME}"
 
 psql_run() {
   PGPASSWORD="$DB_PASSWORD" psql $PG_OPTS "$@"
+}
+
+psql_migrate() {
+  # ON_ERROR_STOP=1 hace que psql salga con código ≠ 0 si hay error SQL
+  PGPASSWORD="$MIGRATE_PASSWORD" psql $PG_MIGRATE_OPTS -v ON_ERROR_STOP=1 "$@"
 }
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"; }
@@ -46,8 +59,8 @@ case "$MODE" in
       already_applied=$(psql_run -t -c "SELECT COUNT(*) FROM _sql_migrations WHERE filename = '$filename';" | tr -d ' ')
 
       if [[ "$already_applied" == "0" ]]; then
-        log "Aplicando: $filename"
-        psql_run -f "$migration_file" -q
+        log "Aplicando: $filename (como usuario $MIGRATE_USER)"
+        psql_migrate -f "$migration_file" -q
         psql_run -c "INSERT INTO _sql_migrations (filename) VALUES ('$filename') ON CONFLICT (filename) DO NOTHING;" -q
         log "OK: $filename"
         APPLIED=$((APPLIED + 1))
