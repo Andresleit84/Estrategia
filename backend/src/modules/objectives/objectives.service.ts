@@ -186,14 +186,14 @@ export class ObjectivesService {
         [newIntentId, id, orgId],
       );
     }
-    this.redis.delPattern(`reports:*:${orgId}:*`).catch(() => {});
+    this.redis.delPattern(`reports:*:${orgId}:*`).catch((err) => this.logger.warn('Failed to invalidate report cache', err));
     return this.findOne(orgId, id);
   }
 
   async cancel(orgId: string, id: string, userId: string) {
     await this.findOne(orgId, id);
     await this.db.query(`CALL sp_cancel_objective($1, $2)`, [id, userId]);
-    this.redis.delPattern(`reports:*:${orgId}:*`).catch(() => {});
+    this.redis.delPattern(`reports:*:${orgId}:*`).catch((err) => this.logger.warn('Failed to invalidate report cache', err));
     return this.findOne(orgId, id);
   }
 
