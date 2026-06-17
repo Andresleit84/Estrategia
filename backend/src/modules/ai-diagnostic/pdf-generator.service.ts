@@ -1,8 +1,11 @@
 ﻿import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const PDFDocument = require('pdfkit');
+import PDFDocument from 'pdfkit';
+
+type PdfDoc = PDFKit.PDFDocument;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ReportData = Record<string, any>;
 
 const C = {
   navy:     '#0B2545',
@@ -41,7 +44,7 @@ export class PdfGeneratorService {
     return dir;
   }
 
-  async generate(reportId: string, data: any): Promise<string> {
+  async generate(reportId: string, data: ReportData): Promise<string> {
     const filePath = path.join(this.storageDir, `${reportId}.pdf`);
     await this.buildPdf(filePath, data);
     return filePath;
@@ -51,7 +54,7 @@ export class PdfGeneratorService {
     return path.join(this.storageDir, `${reportId}.pdf`);
   }
 
-  private buildPdf(filePath: string, d: any): Promise<void> {
+  private buildPdf(filePath: string, d: ReportData): Promise<void> {
     return new Promise((resolve, reject) => {
       const doc = new PDFDocument({ size: 'A4', margin: 0, compress: true });
       const stream = fs.createWriteStream(filePath);
@@ -75,7 +78,7 @@ export class PdfGeneratorService {
 
   // ─── Cover ────────────────────────────────────────────────────────────────
 
-  private coverPage(doc: any, d: any) {
+  private coverPage(doc: PdfDoc, d: ReportData) {
     doc.rect(0, 0, PW, PH).fill(C.navy);
     doc.rect(0, 0, PW, 8).fill(C.orange);
 
@@ -113,7 +116,7 @@ export class PdfGeneratorService {
 
   // ─── Entity Profile ───────────────────────────────────────────────────────
 
-  private entityProfilePage(doc: any, d: any) {
+  private entityProfilePage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'PERFIL DE LA ENTIDAD', '01');
     const ep = d.content?.entity_profile ?? {};
@@ -186,7 +189,7 @@ export class PdfGeneratorService {
 
   // ─── Executive Summary ────────────────────────────────────────────────────
 
-  private execSummaryPage(doc: any, d: any) {
+  private execSummaryPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'RESUMEN EJECUTIVO', '02');
     let y = CONTENT_TOP;
@@ -209,7 +212,7 @@ export class PdfGeneratorService {
 
   // ─── Strategic Insights ───────────────────────────────────────────────────
 
-  private strategicInsightsPage(doc: any, d: any) {
+  private strategicInsightsPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'INSIGHTS ESTRATÉGICOS', '03');
     const insights: string[] = d.content?.strategic_insights ?? [];
@@ -238,11 +241,11 @@ export class PdfGeneratorService {
 
   // ─── Regulatory ───────────────────────────────────────────────────────────
 
-  private regulatoryPage(doc: any, d: any) {
+  private regulatoryPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'ENTORNO REGULATORIO', '04');
     const reg = d.content?.regulatory_context ?? {};
-    const entities: any[] = reg.entities ?? [];
+    const entities: Record<string, any>[] = reg.entities ?? [];
     let y = CONTENT_TOP;
 
     if (entities.length) {
@@ -294,12 +297,12 @@ export class PdfGeneratorService {
 
   // ─── Benchmark ────────────────────────────────────────────────────────────
 
-  private benchmarkPage(doc: any, d: any) {
+  private benchmarkPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'BENCHMARK COMPETITIVO', '05');
     const bm = d.content?.benchmark ?? {};
-    const national: any[] = bm.national_players ?? [];
-    const latam: any[] = bm.latam_references ?? [];
+    const national: Record<string, any>[] = bm.national_players ?? [];
+    const latam: Record<string, any>[] = bm.latam_references ?? [];
     const trends: string[] = bm.industry_trends ?? [];
     let y = CONTENT_TOP;
 
@@ -334,7 +337,7 @@ export class PdfGeneratorService {
 
   // ─── SWOT ─────────────────────────────────────────────────────────────────
 
-  private swotPage(doc: any, d: any) {
+  private swotPage(doc: PdfDoc, d: ReportData) {
     const swot = d.content?.swot ?? {};
     const half = (CW - 12) / 2;
     const qH = 340;
@@ -361,7 +364,7 @@ export class PdfGeneratorService {
     this.pageFooter(doc, d.orgName);
   }
 
-  private swotQuadrant(doc: any, x: number, y: number, w: number, h: number, label: string, items: any[], color: string, bg: string, icon: string) {
+  private swotQuadrant(doc: PdfDoc, x: number, y: number, w: number, h: number, label: string, items: Record<string, any>[], color: string, bg: string, icon: string) {
     doc.rect(x, y, w, h).fill(bg);
     doc.rect(x, y, w, 26).fill(color);
     doc.font('Helvetica-Bold').fontSize(8).fillColor(C.white)
@@ -386,10 +389,10 @@ export class PdfGeneratorService {
 
   // ─── Recommendations ──────────────────────────────────────────────────────
 
-  private recommendationsPage(doc: any, d: any) {
+  private recommendationsPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'RECOMENDACIONES ESTRATÉGICAS', '07');
-    const recs: any[] = d.content?.strategic_recommendations ?? [];
+    const recs: Record<string, any>[] = d.content?.strategic_recommendations ?? [];
     let y = CONTENT_TOP;
 
     const tColor = (t: string) => t === 'SHORT' ? C.green : t === 'MEDIUM' ? C.blue : C.orange;
@@ -428,10 +431,10 @@ export class PdfGeneratorService {
 
   // ─── Bibliography ─────────────────────────────────────────────────────────
 
-  private bibliographyPage(doc: any, d: any) {
+  private bibliographyPage(doc: PdfDoc, d: ReportData) {
     doc.addPage();
     this.pageHeader(doc, 'FUENTES Y BIBLIOGRAFÍA', '08');
-    const bib: any[] = d.content?.bibliography ?? [];
+    const bib: Record<string, any>[] = d.content?.bibliography ?? [];
     let y = CONTENT_TOP;
 
     if (bib.length) {
@@ -485,7 +488,7 @@ export class PdfGeneratorService {
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
-  private pageHeader(doc: any, title: string, num: string) {
+  private pageHeader(doc: PdfDoc, title: string, num: string) {
     doc.rect(0, 0, PW, 56).fill(C.navy);
     doc.rect(0, 56, PW, 3).fill(C.orange);
     doc.font('Helvetica-Bold').fontSize(13).fillColor(C.white)
@@ -494,7 +497,7 @@ export class PdfGeneratorService {
        .text(num, PW - MR - 24, 24, { width: 24, align: 'right' });
   }
 
-  private pageFooter(doc: any, orgName: string) {
+  private pageFooter(doc: PdfDoc, orgName: string) {
     doc.moveTo(ML, FOOTER_Y).lineTo(PW - MR, FOOTER_Y).lineWidth(0.5).strokeColor(C.lightGray).stroke();
     doc.font('Helvetica').fontSize(7.5).fillColor(C.gray)
        .text(orgName, ML, FOOTER_Y + 8, { width: CW / 2 });
@@ -503,7 +506,7 @@ export class PdfGeneratorService {
   }
 
   /** Draws an info box with exact height from text measurement. Returns bottom y. */
-  private infoBox(doc: any, label: string, text: string, startY: number): number {
+  private infoBox(doc: PdfDoc, label: string, text: string, startY: number): number {
     const PAD_TOP = 24;
     const PAD_BOTTOM = 12;
     doc.font('Helvetica').fontSize(9);
@@ -521,7 +524,7 @@ export class PdfGeneratorService {
   }
 
   /** Renders a table block; returns y after last row. */
-  private tableBlock(doc: any, startY: number, headers: string[], widths: number[], rows: any[][], orgName: string, sectionNum: string): number {
+  private tableBlock(doc: PdfDoc, startY: number, headers: string[], widths: number[], rows: Record<string, any>[][], orgName: string, sectionNum: string): number {
     let y = startY;
 
     // Header row
@@ -564,7 +567,7 @@ export class PdfGeneratorService {
   }
 
   /** Adds a new page if remaining space is insufficient. Returns safe y. */
-  private checkPageBreak(doc: any, y: number, neededH: number, orgName: string, title: string, num: string): number {
+  private checkPageBreak(doc: PdfDoc, y: number, neededH: number, orgName: string, title: string, num: string): number {
     if (y + neededH > FOOTER_Y - 10) {
       doc.addPage();
       this.pageHeader(doc, title, num);
@@ -574,3 +577,5 @@ export class PdfGeneratorService {
     return y;
   }
 }
+
+

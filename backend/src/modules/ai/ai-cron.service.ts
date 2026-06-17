@@ -105,7 +105,14 @@ export class AiCronService {
   @Cron('0 * * * *', { name: 'notifications-hourly', timeZone: 'UTC' })
   async runHourlyNotifications() {
     const now = new Date();
-    const orgs = await this.activeOrgs();
+    let orgs: OrgInfo[] = [];
+    try {
+      orgs = await this.activeOrgs();
+    } catch (err) {
+      const e = err as Record<string, unknown>;
+      this.logger.error(`activeOrgs failed: code=${e['code']} position=${e['position']} message=${e['message']}`);
+      return;
+    }
     this.logger.log(`Hourly notifications check — ${orgs.length} active orgs`);
 
     await Promise.allSettled(
@@ -229,7 +236,11 @@ export class AiCronService {
         const sent = await this.runNotification(org, type);
         await this.updateSentAt(org.organization_id, type, sent);
       } catch (err) {
-        this.logger.error(`Failed ${type} for ${org.org_name}: ${(err as Error).message}`);
+        const e = err as Record<string, unknown>;
+        const msg = (e['message'] as string) ?? String(err);
+        const pos = e['position'] ? ` pos=${e['position']}` : '';
+        const code = e['code'] ? ` code=${e['code']}` : '';
+        this.logger.error(`Failed ${type} for ${org.org_name}:${code}${pos} ${msg}`);
       }
     }
   }

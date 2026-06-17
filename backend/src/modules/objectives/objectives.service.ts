@@ -133,7 +133,7 @@ export class ObjectivesService {
         }
       }
       const created = await this.findOne(orgId, objId);
-      this.redis.delPattern(`reports:*:${orgId}:*`).catch(() => {});
+      this.redis.delPattern(`reports:*:${orgId}:*`).catch((err) => this.logger.warn('Failed to invalidate report cache', err));
       if (level === 'TEAM') {
         this.ai.runAlignmentAudit(orgId, dto.cycle_id).catch((err) =>
           this.logger.warn('Auto alignment audit failed on team objective create', err),

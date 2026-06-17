@@ -4,11 +4,15 @@ import {
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { AcceptInvitationDto } from './dto/accept-invitation.dto';
+import { SwitchOrgDto } from './dto/switch-org.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from '../../common/decorators/public.decorator';
@@ -80,6 +84,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ auth: { limit: 10, ttl: 3_600_000 } })
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -98,7 +103,7 @@ export class AuthController {
   @HttpCode(200)
   async switchOrg(
     @CurrentUser() user: UserSession,
-    @Body() body: { org_id: string },
+    @Body() body: SwitchOrgDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -151,9 +156,8 @@ export class AuthController {
   @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @Post('forgot-password')
   @HttpCode(200)
-  async forgotPassword(@Body() body: { email: string }) {
-    if (!body.email) return { ok: true };
-    await this.auth.forgotPassword(body.email);
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    await this.auth.forgotPassword(dto.email);
     return { ok: true };
   }
 
@@ -168,12 +172,12 @@ export class AuthController {
   @Post('reset-password')
   @HttpCode(200)
   async resetPassword(
-    @Body() body: { token: string; newPassword: string },
+    @Body() dto: ResetPasswordDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken, user } = await this.auth.consumeResetToken(
-      body.token, body.newPassword, req.ip ?? '', req.headers['user-agent'] ?? '',
+      dto.token, dto.newPassword, req.ip ?? '', req.headers['user-agent'] ?? '',
     );
     res.cookie('access_token', accessToken, cookieOpts(ACCESS_TTL));
     res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
@@ -184,14 +188,14 @@ export class AuthController {
   @Throttle({ auth: { limit: 10, ttl: 3_600_000 } })
   @Post('accept-invitation')
   async acceptInvitation(
-    @Body() body: { token: string; name: string; password: string },
+    @Body() dto: AcceptInvitationDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const ip = req.ip ?? '';
     const device = req.headers['user-agent'] ?? '';
     const { accessToken, refreshToken, user } = await this.auth.acceptInvitation(
-      body.token, body.name, body.password, ip, device,
+      dto.token, dto.name, dto.password, ip, device,
     );
     res.cookie('access_token',  accessToken,  cookieOpts(ACCESS_TTL));
     res.cookie('refresh_token', refreshToken, cookieOpts(REFRESH_TTL));
