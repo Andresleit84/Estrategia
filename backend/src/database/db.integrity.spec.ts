@@ -399,6 +399,19 @@ describe('Performance — query response times', () => {
     return ms(start);
   }
 
+  // Pre-calentar el plan cache de pg para evitar falsos positivos por cold start.
+  // La primera ejecución de cualquier query carga catálogo + planifica; las siguientes son rápidas.
+  beforeAll(async () => {
+    if (!dbAvailable) return;
+    await Promise.allSettled([
+      pool.query('SELECT 1'),
+      pool.query('SELECT * FROM v_objectives_with_progress LIMIT 1'),
+      pool.query('SELECT * FROM v_check_in_history LIMIT 1'),
+      pool.query("SELECT fn_check_login_attempts('warmup@warmup.com'::citext)"),
+      pool.query("SELECT fn_first_day_context('00000000-0000-0000-0000-000000000000'::uuid, '00000000-0000-0000-0000-000000000000'::uuid)"),
+    ]);
+  }, 15000);
+
   it('SELECT 1 responds in < 50ms (connection baseline)', async () => {
     skipIfNoDb();
     const elapsed = await measureQuery('SELECT 1');
