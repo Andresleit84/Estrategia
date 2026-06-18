@@ -9,7 +9,6 @@ import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-valid
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { AcceptInvitationDto } from './dto/accept-invitation.dto';
 import { SwitchOrgDto } from './dto/switch-org.dto';
@@ -156,8 +155,10 @@ export class AuthController {
   @Throttle({ auth: { limit: 5, ttl: 3_600_000 } })
   @Post('forgot-password')
   @HttpCode(200)
-  async forgotPassword(@Body() dto: ForgotPasswordDto) {
-    await this.auth.forgotPassword(dto.email);
+  async forgotPassword(@Body() body: Record<string, unknown>) {
+    // Siempre retorna 200 sin importar el input — nunca revelar si el email existe o es válido
+    const email = typeof body?.email === 'string' ? body.email.trim() : '';
+    if (email) await this.auth.forgotPassword(email).catch(() => undefined);
     return { ok: true };
   }
 
