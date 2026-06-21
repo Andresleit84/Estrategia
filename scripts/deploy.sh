@@ -75,3 +75,7 @@ else
 fi
 
 log "=== DEPLOY COMPLETADO ==="
+
+# 8. Post-deploy check completo (siempre exit 0, notifica por Telegram)
+log "Ejecutando post-deploy check..."
+node "$PROJECT_DIR/scripts/post-deploy-check.js" || true
