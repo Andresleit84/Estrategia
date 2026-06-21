@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsIn, MaxLength, IsObject } from 'class-validator';
+import { IsString, IsOptional, IsIn, MaxLength, IsObject, IsArray } from 'class-validator';
 
 export class UpdateOrgDto {
   @IsOptional() @IsString() @MaxLength(100)
@@ -13,4 +13,13 @@ export class UpdateOrgDto {
   @IsOptional()
   @IsIn(['GENERIC', 'COOPERATIVE_FINANCIAL', 'BANKING', 'INSURANCE', 'OTHER'])
   sector?: string;
+
+  @IsOptional() @IsString() @MaxLength(500)
+  vision?: string;
+
+  @IsOptional() @IsString() @MaxLength(500)
+  mission?: string;
+
+  @IsOptional() @IsArray()
+  values_list?: string[];
 }

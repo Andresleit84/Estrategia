@@ -52,6 +52,11 @@ async function bootstrap() {
 
   const isProd = isProdEnv;
 
+  // Trust the first proxy hop (Nginx) so req.ip returns the real client IP.
+  // Without this, ThrottlerGuard sees 127.0.0.1 for every request and all
+  // clients share the same rate-limit bucket.
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'same-site' },
     contentSecurityPolicy: false, // handled by Nginx reverse proxy

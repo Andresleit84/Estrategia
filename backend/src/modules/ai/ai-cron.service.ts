@@ -514,7 +514,10 @@ export class AiCronService {
             || jsonb_build_object($2::text, $3::text)
             || jsonb_build_object(
                  $4::text,
-                 (jsonb_build_array($5::jsonb) || COALESCE(parameters->$4::text, '[]'::jsonb))[0:4]
+                 jsonb_path_query_array(
+                   jsonb_build_array($5::jsonb) || COALESCE(parameters->$4::text, '[]'::jsonb),
+                   '$[0 to 3]'
+                 )
                )
         WHERE id = $1`,
       [orgId, sentKey, now, logKey, entry],

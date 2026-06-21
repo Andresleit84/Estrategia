@@ -26,9 +26,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("[ErrorBoundary]", error, info.componentStack);
-    }
+    console.error("[ErrorBoundary]", error.message, error.stack?.split("\n")[1], info.componentStack?.split("\n")[1]);
   }
 
   handleReset = () => {
@@ -46,7 +44,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <AlertTriangle className="h-8 w-8 text-destructive" />
         <div>
           <p className="text-sm font-semibold text-destructive">Algo salió mal</p>
-          {process.env.NODE_ENV !== "production" && this.state.error && (
+          {this.state.error && (
             <p className="mt-1 text-xs text-muted-foreground font-mono">
               {this.state.error.message}
             </p>

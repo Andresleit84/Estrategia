@@ -388,7 +388,7 @@ function VisionCard() {
   const { data: org } = useOrganization();
   const update = useUpdateOrganization();
 
-  const saved = (org?.settings as Record<string, unknown> | undefined)?.vision as string | undefined;
+  const saved = (org?.vision as string | undefined) ?? undefined;
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
   const [saved2, setSaved2] = useState(false);
@@ -398,8 +398,7 @@ function VisionCard() {
   }, [saved, editing]);
 
   async function handleSave() {
-    const existing = (org?.settings as Record<string, unknown>) ?? {};
-    await update.mutateAsync({ settings: { ...existing, vision: value.trim() } });
+    await update.mutateAsync({ vision: value.trim() });
     setEditing(false);
     setSaved2(true);
     setTimeout(() => setSaved2(false), 2000);

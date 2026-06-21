@@ -5,7 +5,7 @@ import { getApiErrorMessage } from "@/lib/api-client";
 import { Sparkles, RefreshCw, ChevronRight, TrendingUp, TrendingDown, Minus, CheckCircle2, AlertCircle, Zap, Users, UserCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatKRValue } from "@/lib/utils";
 import { useSuggestOkrs, type OkrSuggestion } from "@/hooks/useAI";
 import { useCreateObjective, type Objective } from "@/hooks/useObjectives";
 import { useCreateKeyResult } from "@/hooks/useKeyResults";
@@ -110,7 +110,7 @@ function SuggestionCard({
                     {kr.title}
                     {kr.type !== "ACHIEVE" && (
                       <span className="ml-1 text-muted-foreground/60">
-                        ({KR_TYPE_LABELS[kr.type]} {kr.start_value} → {kr.target_value} {kr.metric_unit})
+                        ({KR_TYPE_LABELS[kr.type]} {formatKRValue(kr.start_value, kr.metric_unit)} → {formatKRValue(kr.target_value, kr.metric_unit)})
                       </span>
                     )}
                   </span>

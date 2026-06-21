@@ -60,6 +60,7 @@ function TrendIcon({ trend }: { trend: string }) {
 function formatValue(value: number, unit: string) {
   if (unit === "%") return `${value}%`;
   if (unit === "$") return `$${value.toLocaleString()}`;
+  if (unit === "#" || unit === "") return `${value}`;
   return `${value} ${unit}`;
 }
 

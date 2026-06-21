@@ -159,8 +159,8 @@ export function TraceabilityCheckInDrawer({
                     </div>
                     <p className="text-xs font-semibold leading-snug">{kr.title}</p>
                     <p className="text-[10px] text-muted-foreground mt-0.5">
-                      Actual: <strong>{kr.current_value}</strong> {kr.metric_unit}
-                      {" · "}Meta: {kr.target_value} {kr.metric_unit}
+                      Actual: <strong>{kr.current_value}</strong>{kr.metric_unit && kr.metric_unit !== "#" ? ` ${kr.metric_unit}` : ""}
+                      {" · "}Meta: {kr.target_value}{kr.metric_unit && kr.metric_unit !== "#" ? ` ${kr.metric_unit}` : ""}
                     </p>
                   </div>
                   {isDone && (

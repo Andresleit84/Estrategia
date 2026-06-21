@@ -25,7 +25,7 @@ import {
   DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, formatKRValue } from "@/lib/utils";
 
 // ── Semáforo con etiqueta ────────────────────────────────────────────────────
 
@@ -739,7 +739,7 @@ function GapSuggestions({
                             <div className="h-1 w-1 rounded-full bg-muted-foreground/50 shrink-0" />
                             <span className="truncate">{kr.title}</span>
                             <span className="shrink-0 tabular-nums text-[10px]">
-                              {kr.start_value}→{kr.target_value} {kr.metric_unit}
+                              {formatKRValue(kr.start_value, kr.metric_unit)}→{formatKRValue(kr.target_value, kr.metric_unit)}
                             </span>
                           </div>
                         ))}

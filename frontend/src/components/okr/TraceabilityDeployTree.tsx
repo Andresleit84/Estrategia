@@ -8,7 +8,7 @@ import {
   ArrowDownRight, ArrowUpRight, BarChart2,
   User, Layers,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatKRValue } from "@/lib/utils";
 import type { ObjectiveTreeNode, TreeKR } from "@/hooks/useObjectives";
 
 // ── Layer config ───────────────────────────────────────────────────────────────
@@ -552,9 +552,9 @@ function KRDetailPanel({ kr, parent, parentLayer, onClose }: SelectedKR & { onCl
           <div className="px-4 py-3 border-b border-border/30">
             <p className="text-[8px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Métrica</p>
             <div className="bg-muted/40 rounded-lg p-3 space-y-1.5">
-              {[["Inicial", kr.current_value === 0 ? "—" : `${kr.current_value} ${kr.metric_unit}`],
-                ["Actual",  `${kr.current_value} ${kr.metric_unit}`],
-                ["Meta",    `${kr.target_value} ${kr.metric_unit}`]
+              {[["Inicial", kr.current_value === 0 ? "—" : formatKRValue(kr.current_value, kr.metric_unit)],
+                ["Actual",  formatKRValue(kr.current_value, kr.metric_unit)],
+                ["Meta",    formatKRValue(kr.target_value, kr.metric_unit)]
               ].map(([lbl, val]) => (
                 <div key={lbl} className="flex justify-between text-[11px]">
                   <span className="text-muted-foreground">{lbl}</span>

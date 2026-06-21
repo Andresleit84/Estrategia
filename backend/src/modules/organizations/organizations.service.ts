@@ -14,7 +14,7 @@ export class OrganizationsService {
 
   async findOne(orgId: string) {
     const org = await this.db.queryOne<Record<string, unknown>>(
-      `SELECT id, name, slug, mode, plan, logo_url, settings, sector, created_at
+      `SELECT id, name, slug, mode, plan, logo_url, settings, sector, vision, mission, values_list, created_at
          FROM organizations WHERE id = $1 AND deleted_at IS NULL`,
       [orgId],
     );
@@ -24,8 +24,17 @@ export class OrganizationsService {
 
   async update(orgId: string, dto: UpdateOrgDto) {
     await this.db.execute(
-      `SELECT fn_update_organization($1, $2, $3, $4, $5)`,
-      [orgId, dto.name ?? null, dto.mode ?? null, dto.settings ? JSON.stringify(dto.settings) : null, dto.sector ?? null],
+      `SELECT fn_update_organization($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        orgId,
+        dto.name    ?? null,
+        dto.mode    ?? null,
+        dto.settings ? JSON.stringify(dto.settings) : null,
+        dto.sector  ?? null,
+        dto.vision  ?? null,
+        dto.mission ?? null,
+        dto.values_list ?? null,
+      ],
     );
     return this.findOne(orgId);
   }

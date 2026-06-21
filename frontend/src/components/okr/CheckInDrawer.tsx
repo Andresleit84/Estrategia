@@ -359,9 +359,11 @@ export function CheckInDrawer({ kr, open, onOpenChange }: CheckInDrawerProps) {
   if (!kr) return null;
 
   function formatVal(v: number) {
-    if (kr!.metric_unit === "%") return `${v}%`;
-    if (kr!.metric_unit === "$") return `$${v.toLocaleString()}`;
-    return `${v} ${kr!.metric_unit}`;
+    const unit = kr!.metric_unit ?? "";
+    if (unit === "%" ) return `${v}%`;
+    if (unit === "$" ) return `$${v.toLocaleString()}`;
+    if (unit === "#" || unit === "") return `${v}`;
+    return `${v} ${unit}`;
   }
 
   const numValue       = parseFloat(value) || 0;

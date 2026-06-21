@@ -31,7 +31,7 @@ export function useOrgMembers() {
 export function useUpdateOrganization() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: { name?: string; mode?: string; settings?: Record<string, unknown>; sector?: string }) =>
+    mutationFn: (data: { name?: string; mode?: string; settings?: Record<string, unknown>; sector?: string; vision?: string; mission?: string; values_list?: string[] }) =>
       api.patch('/organizations/me', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['organization'] });

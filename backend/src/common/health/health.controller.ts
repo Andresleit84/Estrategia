@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { DbService } from '../../database/db.service';
 import { RedisService } from '../redis/redis.service';
 import { Public } from '../decorators/public.decorator';
@@ -11,6 +12,7 @@ export class HealthController {
   ) {}
 
   @Public()
+  @SkipThrottle()
   @Get()
   async check() {
     const [dbOk, redisOk] = await Promise.all([

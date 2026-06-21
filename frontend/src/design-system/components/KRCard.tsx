@@ -41,6 +41,7 @@ const TYPE_LABEL: Record<KRType, string> = {
 function formatValue(value: number, unit: string) {
   if (unit === "%") return `${value}%`;
   if (unit === "$") return `$${value.toLocaleString()}`;
+  if (unit === "#" || unit === "") return `${value.toLocaleString()}`;
   return `${value.toLocaleString()} ${unit}`;
 }
 

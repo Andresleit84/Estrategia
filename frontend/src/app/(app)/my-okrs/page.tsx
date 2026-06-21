@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { useMyWork, type MyKR, type NorthStarObjective } from "@/hooks/useMyWork";
-import { cn } from "@/lib/utils";
+import { cn, formatKRValue } from "@/lib/utils";
 import {
   Target, TrendingUp, CheckSquare, AlertCircle, ChevronRight,
   Building2, Star, Clock, Calendar,
@@ -111,7 +111,7 @@ function KRCard({ kr }: { kr: MyKR }) {
       {/* Progress bar */}
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{kr.current_value}{kr.metric_unit ? ` ${kr.metric_unit}` : ""} / {kr.target_value}{kr.metric_unit ? ` ${kr.metric_unit}` : ""}</span>
+          <span>{formatKRValue(kr.current_value, kr.metric_unit)} / {formatKRValue(kr.target_value, kr.metric_unit)}</span>
           <span className="font-semibold text-foreground">{kr.kr_progress}%</span>
         </div>
         <div className="h-1.5 rounded-full bg-muted overflow-hidden">

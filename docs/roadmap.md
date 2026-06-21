@@ -1256,3 +1256,33 @@ Rediseño completo del componente `TraceabilityDeployTree.tsx` (~950 líneas). S
 | 071 | Fix v_user_session (sesión anterior) |
 | 072 | kr_category, kpi_description, gap_note, recommendation + view rebuild |
 | 073 | refs_data JSONB + view rebuild final |
+
+---
+
+## BACKLOG — Seguridad e Infraestructura (2026-06-19)
+
+Gaps identificados en auditoría del servidor. No bloquean operación actual pero son necesarios antes de exponer el sistema a clientes o datos sensibles.
+
+### Prioridad Alta
+- [ ] **SSL/TLS + Nginx activo** — todo el tráfico es HTTP puro. Activar Nginx como reverse proxy con Let's Encrypt. Sin esto las cookies JWT viajan en texto plano.
+- [ ] **SMTP configurado** — password reset, invitaciones y notificaciones email no funcionan. Requiere credenciales Brevo/SendGrid en `.env`.
+- [ ] **Sentry DSN** — errores de producción son invisibles. Crear proyecto en sentry.io, agregar `SENTRY_DSN` al `.env`.
+
+### Prioridad Media
+- [ ] **Secrets en vault** — JWT secrets y API keys viven en `.env` plano. Migrar a HashiCorp Vault o variables de entorno del sistema operativo.
+- [ ] **MFA para acceso admin** — solo password. Agregar TOTP (Google Authenticator) para usuarios con rol `ADMIN` o `SUPER_ADMIN`.
+- [ ] **Backups verificados** — scripts de backup existen pero nunca se ha probado un restore completo. Ejecutar drill de restore mensual.
+- [ ] **Cifrado en reposo** — PostgreSQL sin cifrado at-rest. Evaluar pg_crypto a nivel de columnas sensibles o cifrado de disco.
+
+### Prioridad Baja (escala / compliance)
+- [ ] **WAF + DDoS protection** — sin Cloudflare ni similar. Necesario si el sistema queda expuesto a internet público.
+- [ ] **Multi-región / DR plan** — servidor único. Documentar y probar procedimiento de disaster recovery.
+- [ ] **Pen test formal** — nunca realizado. Contratar o ejecutar con herramientas (OWASP ZAP, Burp Suite) antes de go-live con clientes.
+- [ ] **SOC 2 / ISO 27001** — requerido si se vende a empresas reguladas (finanzas, salud, gobierno).
+
+### Resuelto en sesión 2026-06-19
+- [x] Redis sin contraseña → contraseña configurada (`requirepass`) y persistida
+- [x] Health endpoint sin `@SkipThrottle` → corregido, monitor no puede recibir 429
+- [x] PM2 log rotation → instalado `pm2-logrotate` (50MB máx, 7 archivos, comprimido)
+- [x] PM2 auto-start al reboot → `PM2_OKR_Autostart.bat` en carpeta Startup de Windows
+- [x] Bug JSONB slice en `updateSentAt` → `[0:4]` reemplazado por `jsonb_path_query_array`

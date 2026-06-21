@@ -8,7 +8,7 @@ import {
   useFirstDayNarrative,
   useCompleteFirstDay,
 } from "@/hooks/useFirstDay";
-import { cn } from "@/lib/utils";
+import { cn, formatKRValue } from "@/lib/utils";
 import {
   Sparkles, Target, TrendingUp, Users, CheckSquare,
   ChevronRight, ChevronLeft, Building2, Calendar,
@@ -461,7 +461,7 @@ function Step6MyKrs({ krs }: { krs: import("@/hooks/useFirstDay").FirstDayKr[] }
                       <p className="text-sm font-semibold text-white truncate">{kr.title}</p>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-white/50">
-                      <span>{kr.current_value} / {kr.target_value} {kr.metric_unit}</span>
+                      <span>{formatKRValue(kr.current_value, kr.metric_unit)} / {formatKRValue(kr.target_value, kr.metric_unit)}</span>
                       <span className="text-white/20">·</span>
                       <span className="truncate">{kr.objective_title}</span>
                     </div>
