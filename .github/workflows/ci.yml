@@ -122,6 +122,6 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            cd /home/okr/estrategia
+            cd /root/estrategia
             git pull origin main
             bash scripts/deploy.sh
