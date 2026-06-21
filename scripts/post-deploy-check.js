@@ -123,25 +123,26 @@ const CRITICAL_TABLES = [
   'refresh_tokens', 'invitations',
 ];
 
-// Triggers críticos
+// Triggers críticos (nombres reales en la DB)
 const CRITICAL_TRIGGERS = [
-  'trg_checkin_cascade_recalc',
-  'trg_kr_auto_complete',
-  'trg_objective_status_sync',
-  'trg_audit_log',
-  'trg_soft_delete',
+  'trg_audit_log_key_results',
+  'trg_audit_log_objectives',
+  'trg_audit_log_checkins',
+  'trg_audit_log_cycles',
+  'trg_audit_log_organizations',
 ];
 
 // Endpoints API a verificar: [método, path, requiereAuth, descripción, statusEsperado]
 const API_CHECKS = [
   ['GET',  '/api/v1/health',                        false, 'health check',                200],
   ['GET',  '/api/v1/auth/me',                       true,  'auth /me',                    200],
-  ['GET',  '/api/v1/organizations',                 true,  'organizations list',          200],
+  ['GET',  '/api/v1/organizations/me',              true,  'organization actual',         200],
+  ['GET',  '/api/v1/organizations/me/members',      true,  'org members',                 200],
   ['GET',  '/api/v1/cycles',                        true,  'cycles list',                 200],
   ['GET',  '/api/v1/objectives',                    true,  'objectives list',             200],
   ['GET',  '/api/v1/teams',                         true,  'teams list',                  200],
-  ['GET',  '/api/v1/key-results',                   true,  'key-results list',            200],
-  ['GET',  '/api/v1/check-ins/at-risk',             true,  'check-ins at-risk',           200],
+  ['GET',  '/api/v1/check-ins/at-risk-krs',         true,  'check-ins at-risk-krs',       200],
+  ['GET',  '/api/v1/check-ins/cadence-dashboard',   true,  'cadence dashboard',           200],
   ['GET',  '/api/v1/reports/executive-dashboard',   true,  'executive dashboard',         200],
   ['GET',  '/api/v1/search?q=test',                 true,  'global search',               200],
   ['GET',  '/api/v1/areas',                         true,  'areas list',                  200],
@@ -243,12 +244,15 @@ async function checkInfrastructure() {
     const raw  = execSync('pm2 jlist', { timeout: 10000 }).toString();
     const list = JSON.parse(raw);
     const online = list.filter((p) => p.pm2_env?.status === 'online').map((p) => p.name);
-    const missing = EXPECTED_PM2.filter((name) => !online.includes(name));
-    const extras  = EXPECTED_PM2.length;
-    if (missing.length === 0) {
-      record('INFRA', `PM2 (${online.length} procesos online)`, 'pass', EXPECTED_PM2.join(', '));
+    // okr-test-agent tiene autorestart:false — puede estar stopped (normal fuera de cron)
+    const missingStrict = EXPECTED_PM2.filter((name) => {
+      if (name === 'okr-test-agent') return false; // puede estar stopped
+      return !online.includes(name);
+    });
+    if (missingStrict.length === 0) {
+      record('INFRA', `PM2 (${online.length} activos de ${EXPECTED_PM2.length})`, 'pass', online.join(', '));
     } else {
-      record('INFRA', 'PM2 procesos', 'fail', `Faltantes: ${missing.join(', ')}`);
+      record('INFRA', 'PM2 procesos', 'fail', `Faltantes: ${missingStrict.join(', ')}`);
     }
     // Restarts excesivos en okr-backend
     const backend = list.filter((p) => p.name === 'okr-backend');
@@ -450,7 +454,7 @@ async function checkDatabase(pool) {
   // Audit log funcional (tiene registros recientes)
   try {
     const { rows } = await pool.query(
-      `SELECT count(*)::int AS n FROM audit_log WHERE created_at > NOW() - INTERVAL '24 hours'`,
+      `SELECT count(*)::int AS n FROM audit_log WHERE occurred_at > NOW() - INTERVAL '24 hours'`,
     );
     const n = rows[0]?.n ?? 0;
     record('DB', `Audit log activo (${n} registros 24h)`, n >= 0 ? 'pass' : 'warn');
@@ -581,7 +585,13 @@ async function checkAgents() {
         const restarts = online[0].pm2_env?.restart_time ?? 0;
         record('AGENTES', `${agent} online`, 'pass', `restarts: ${restarts}`);
       } else if (procs.length > 0) {
-        record('AGENTES', `${agent}`, 'fail', `status: ${procs[0].pm2_env?.status}`);
+        const status = procs[0].pm2_env?.status;
+        // test-agent es autorestart:false — stopped es normal fuera del cron
+        if (agent === 'okr-test-agent' && status === 'stopped') {
+          record('AGENTES', `${agent}`, 'pass', 'stopped (normal — cron 02:00)');
+        } else {
+          record('AGENTES', `${agent}`, 'fail', `status: ${status}`);
+        }
       } else {
         record('AGENTES', `${agent}`, 'fail', 'proceso no encontrado en PM2');
       }
