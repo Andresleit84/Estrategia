@@ -781,17 +781,20 @@ function ListView({ agreements, onEdit, onConvert, onCreate }: {
   const [tab,     setTab]     = useState<"active" | "fulfilled" | "cancelled" | "all">("active");
   const [groupBy, setGroupBy] = useState(false);
 
+  const TERMINAL: AgreementStatus[] = ["FULFILLED", "CLOSED", "CANCELLED"];
+  const DONE: AgreementStatus[]     = ["FULFILLED", "CLOSED"];
+
   const counts = {
-    active:    agreements.filter(a => a.status !== "FULFILLED" && a.status !== "CANCELLED").length,
-    fulfilled: agreements.filter(a => a.status === "FULFILLED").length,
+    active:    agreements.filter(a => !TERMINAL.includes(a.status)).length,
+    fulfilled: agreements.filter(a => DONE.includes(a.status)).length,
     cancelled: agreements.filter(a => a.status === "CANCELLED").length,
     all:       agreements.length,
   };
   const labels = { active: "Activos", fulfilled: "Cumplidos", cancelled: "Cancelados", all: "Todos" };
 
   const displayed =
-    tab === "active"    ? agreements.filter(a => a.status !== "FULFILLED" && a.status !== "CANCELLED") :
-    tab === "fulfilled" ? agreements.filter(a => a.status === "FULFILLED") :
+    tab === "active"    ? agreements.filter(a => !TERMINAL.includes(a.status)) :
+    tab === "fulfilled" ? agreements.filter(a => DONE.includes(a.status)) :
     tab === "cancelled" ? agreements.filter(a => a.status === "CANCELLED") :
     agreements;
 

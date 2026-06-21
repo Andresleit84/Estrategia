@@ -5,16 +5,26 @@ import { CreateAgreementDto } from './dto/create-agreement.dto';
 import { UpdateAgreementDto } from './dto/update-agreement.dto';
 
 const STATUS_ES: Record<string, string> = {
-  PENDING: 'Pendiente',
+  OPEN:        'Abierto',
+  PENDING:     'Pendiente',
   IN_PROGRESS: 'En progreso',
-  FULFILLED: 'Cumplido',
-  CANCELLED: 'Cancelado',
+  TRACKING:    'En seguimiento',
+  EVIDENCE:    'Evidencia',
+  FULFILLED:   'Cumplido',
+  CLOSED:      'Cerrado',
+  ESCALATED:   'Escalado',
+  CANCELLED:   'Cancelado',
 };
 const STATUS_ICON: Record<string, string> = {
-  PENDING: '⏳',
+  OPEN:        '🔵',
+  PENDING:     '⏳',
   IN_PROGRESS: '🟡',
-  FULFILLED: '✅',
-  CANCELLED: '⚫',
+  TRACKING:    '🔍',
+  EVIDENCE:    '📋',
+  FULFILLED:   '✅',
+  CLOSED:      '🔒',
+  ESCALATED:   '🚨',
+  CANCELLED:   '⚫',
 };
 
 @Injectable()
@@ -187,12 +197,17 @@ export class AgreementsService {
   async getStats(orgId: string) {
     const [row] = await this.db.query<Record<string, number>>(
       `SELECT
-         COUNT(*)                                              AS total,
-         COUNT(*) FILTER (WHERE status = 'PENDING')           AS pending,
-         COUNT(*) FILTER (WHERE status = 'IN_PROGRESS')       AS in_progress,
-         COUNT(*) FILTER (WHERE status = 'FULFILLED')         AS fulfilled,
-         COUNT(*) FILTER (WHERE status = 'CANCELLED')         AS cancelled,
-         COUNT(*) FILTER (WHERE is_overdue = TRUE)            AS overdue
+         COUNT(*)                                                                        AS total,
+         COUNT(*) FILTER (WHERE status IN ('OPEN','PENDING','IN_PROGRESS','TRACKING','EVIDENCE','ESCALATED')) AS active,
+         COUNT(*) FILTER (WHERE status = 'PENDING')                                     AS pending,
+         COUNT(*) FILTER (WHERE status = 'IN_PROGRESS')                                 AS in_progress,
+         COUNT(*) FILTER (WHERE status = 'OPEN')                                        AS open,
+         COUNT(*) FILTER (WHERE status = 'TRACKING')                                    AS tracking,
+         COUNT(*) FILTER (WHERE status = 'EVIDENCE')                                    AS evidence,
+         COUNT(*) FILTER (WHERE status = 'ESCALATED')                                   AS escalated,
+         COUNT(*) FILTER (WHERE status IN ('FULFILLED','CLOSED'))                        AS fulfilled,
+         COUNT(*) FILTER (WHERE status = 'CANCELLED')                                   AS cancelled,
+         COUNT(*) FILTER (WHERE is_overdue = TRUE)                                      AS overdue
        FROM v_agreements WHERE organization_id = $1`,
       [orgId],
     );

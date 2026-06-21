@@ -21,7 +21,7 @@ export class UpdateAgreementDto {
   @IsOptional() @IsIn(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'])
   priority?: string;
 
-  @IsOptional() @IsIn(['PENDING', 'IN_PROGRESS', 'FULFILLED', 'CANCELLED'])
+  @IsOptional() @IsIn(['OPEN', 'PENDING', 'IN_PROGRESS', 'TRACKING', 'EVIDENCE', 'FULFILLED', 'CLOSED', 'ESCALATED', 'CANCELLED'])
   status?: string;
 
   @IsOptional() @IsUUID()

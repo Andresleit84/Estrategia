@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, Circle, Clock, ChevronDown, ChevronUp, ExternalLink, Users, Target, Zap, BarChart3, Stethoscope, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -247,8 +247,15 @@ export default function ConsultantRoadmapPage() {
   const { data: org } = useOrganization();
   const update = useUpdateOrganization();
 
-  const savedPhases = ((org?.settings as Record<string, unknown> | undefined)?.consultant_phases ?? {}) as Record<string, PhaseStatus>;
-  const [localPhases, setLocalPhases] = useState<Record<string, PhaseStatus>>(savedPhases);
+  const [localPhases, setLocalPhases] = useState<Record<string, PhaseStatus>>({});
+
+  // Sync from server on first org load (org is undefined on mount)
+  useEffect(() => {
+    if (!org) return;
+    const phases = ((org.settings as Record<string, unknown> | undefined)?.consultant_phases ?? {}) as Record<string, PhaseStatus>;
+    setLocalPhases(phases);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org?.id]);
 
   const setPhaseStatus = async (phaseId: string, status: PhaseStatus) => {
     const next = { ...localPhases, [phaseId]: status };
