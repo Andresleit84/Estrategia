@@ -26,7 +26,14 @@ export class CyclesService {
     return this.db.queryOne(
       `SELECT * FROM v_cycles_with_stats
         WHERE organization_id = $1 AND status = 'ACTIVE'
-        ORDER BY (end_date - start_date) ASC`,
+        ORDER BY
+          CASE type
+            WHEN 'ANNUAL'    THEN 1
+            WHEN 'QUARTERLY' THEN 2
+            WHEN 'CUSTOM'    THEN 3
+            ELSE 4
+          END,
+          start_date DESC`,
       [orgId],
     );
   }
