@@ -71,16 +71,20 @@ ALTER TABLE agreements
   ADD COLUMN IF NOT EXISTS deliverable        TEXT;    -- entregable verificable prometido
 
 -- Ampliar el CHECK de status para incluir estados CE
+-- Migrar filas existentes IN_PROGRESS → TRACKING antes de cambiar el constraint
+UPDATE agreements SET status = 'TRACKING' WHERE status = 'IN_PROGRESS';
+
 ALTER TABLE agreements DROP CONSTRAINT IF EXISTS agreements_status_check;
 ALTER TABLE agreements ADD CONSTRAINT agreements_status_check
   CHECK (status IN (
-    'PENDING',    -- genérico: sin asignar
-    'OPEN',       -- CE: registrado en sesión, notificado
-    'TRACKING',   -- CE: responsable reporta avance, sin bloqueo
-    'EVIDENCE',   -- CE: primer artefacto verificable entregado
-    'FULFILLED',  -- genérico: completado (alias de CLOSED)
-    'CLOSED',     -- CE: CE confirmó cierre en sesión
-    'ESCALATED',  -- CE: bloqueo que supera autoridad del responsable
+    'PENDING',      -- genérico: sin asignar
+    'IN_PROGRESS',  -- genérico legacy (alias de TRACKING, mantenido para compatibilidad)
+    'OPEN',         -- CE: registrado en sesión, notificado
+    'TRACKING',     -- CE: responsable reporta avance, sin bloqueo
+    'EVIDENCE',     -- CE: primer artefacto verificable entregado
+    'FULFILLED',    -- genérico: completado (alias de CLOSED)
+    'CLOSED',       -- CE: CE confirmó cierre en sesión
+    'ESCALATED',    -- CE: bloqueo que supera autoridad del responsable
     'CANCELLED'
   ));
 
