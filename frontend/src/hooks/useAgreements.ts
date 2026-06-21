@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 
-export type AgreementStatus = "PENDING" | "IN_PROGRESS" | "FULFILLED" | "CANCELLED";
+export type AgreementStatus = "OPEN" | "PENDING" | "IN_PROGRESS" | "TRACKING" | "EVIDENCE" | "FULFILLED" | "CLOSED" | "ESCALATED" | "CANCELLED";
 export type AgreementPriority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export interface Agreement {

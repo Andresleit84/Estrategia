@@ -51,10 +51,15 @@ const EMPTY_FILTERS: FilterState = { search: "", priority: "", ownerId: "", cycl
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<AgreementStatus, { label: string; color: string; colBg: string; icon: React.ElementType }> = {
-  PENDING:     { label: "Pendiente",  color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",  colBg: "bg-amber-50 dark:bg-amber-950/20",  icon: Clock },
-  IN_PROGRESS: { label: "En proceso", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",      colBg: "bg-blue-50 dark:bg-blue-950/20",    icon: Clock },
-  FULFILLED:   { label: "Cumplido",   color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",  colBg: "bg-green-50 dark:bg-green-950/20",  icon: CheckCircle2 },
-  CANCELLED:   { label: "Cancelado",  color: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",         colBg: "bg-gray-50 dark:bg-gray-900/20",    icon: XCircle },
+  OPEN:        { label: "Abierto",         color: "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400",          colBg: "bg-sky-50 dark:bg-sky-950/20",       icon: AlertCircle },
+  PENDING:     { label: "Pendiente",       color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",  colBg: "bg-amber-50 dark:bg-amber-950/20",   icon: Clock },
+  IN_PROGRESS: { label: "En proceso",      color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",      colBg: "bg-blue-50 dark:bg-blue-950/20",     icon: Clock },
+  TRACKING:    { label: "En seguimiento",  color: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400", colBg: "bg-violet-50 dark:bg-violet-950/20", icon: AlertTriangle },
+  EVIDENCE:    { label: "Evidencia",       color: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400", colBg: "bg-orange-50 dark:bg-orange-950/20", icon: AlertTriangle },
+  FULFILLED:   { label: "Cumplido",        color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",  colBg: "bg-green-50 dark:bg-green-950/20",   icon: CheckCircle2 },
+  CLOSED:      { label: "Cerrado",         color: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400",      colBg: "bg-teal-50 dark:bg-teal-950/20",     icon: CheckCircle2 },
+  ESCALATED:   { label: "Escalado",        color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",          colBg: "bg-red-50 dark:bg-red-950/20",       icon: AlertTriangle },
+  CANCELLED:   { label: "Cancelado",       color: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",         colBg: "bg-gray-50 dark:bg-gray-900/20",     icon: XCircle },
 };
 
 const PRIORITY_CONFIG: Record<AgreementPriority, { label: string; border: string }> = {
@@ -64,8 +69,8 @@ const PRIORITY_CONFIG: Record<AgreementPriority, { label: string; border: string
   LOW:      { label: "Baja",    border: "border-l-gray-300"   },
 };
 
-const KANBAN_COLUMNS: AgreementStatus[] = ["PENDING", "IN_PROGRESS", "FULFILLED", "CANCELLED"];
-const STATUS_FLOW:    AgreementStatus[] = ["PENDING", "IN_PROGRESS", "FULFILLED"];
+const KANBAN_COLUMNS: AgreementStatus[] = ["OPEN", "PENDING", "IN_PROGRESS", "TRACKING", "EVIDENCE", "FULFILLED", "CLOSED", "ESCALATED", "CANCELLED"];
+const STATUS_FLOW:    AgreementStatus[] = ["OPEN", "PENDING", "IN_PROGRESS", "TRACKING", "EVIDENCE", "FULFILLED"];
 
 function getNextStatus(s: AgreementStatus): AgreementStatus | null {
   const i = STATUS_FLOW.indexOf(s);
@@ -129,7 +134,8 @@ function exportToPDF(agreements: Agreement[]) {
     CRITICAL: "#dc2626", HIGH: "#ea580c", MEDIUM: "#ca8a04", LOW: "#9ca3af",
   };
   const statusColor: Record<AgreementStatus, string> = {
-    FULFILLED: "#16a34a", IN_PROGRESS: "#2563eb", PENDING: "#d97706", CANCELLED: "#6b7280",
+    OPEN: "#0284c7", PENDING: "#d97706", IN_PROGRESS: "#2563eb", TRACKING: "#7c3aed",
+    EVIDENCE: "#ea580c", FULFILLED: "#16a34a", CLOSED: "#0d9488", ESCALATED: "#dc2626", CANCELLED: "#6b7280",
   };
 
   const rows = agreements.map(a => `
@@ -420,10 +426,15 @@ const TRANSITION_CONFIG: Record<AgreementStatus, {
   buttonLabel: string;
   destructive?: boolean;
 }> = {
-  PENDING:     { title: "Retroceder a Pendiente",  icon: ChevronLeft,  iconColor: "text-amber-600", placeholder: "¿Por qué se revierte? ¿Qué quedó incompleto?",          buttonLabel: "Retroceder"        },
-  IN_PROGRESS: { title: "Poner en proceso",         icon: ChevronRight, iconColor: "text-blue-600",  placeholder: "¿Qué acción se está tomando? ¿Quién lidera?",           buttonLabel: "Poner en proceso"  },
-  FULFILLED:   { title: "Marcar como Cumplido",     icon: CheckCircle2, iconColor: "text-green-600", placeholder: "¿Cómo se resolvió? Referencia a acta, entregable...",  buttonLabel: "Marcar cumplido"   },
-  CANCELLED:   { title: "Cancelar acuerdo",          icon: XCircle,      iconColor: "text-gray-500",  placeholder: "¿Por qué se cancela? ¿Qué condición no se cumplió?",   buttonLabel: "Cancelar acuerdo", destructive: true },
+  OPEN:        { title: "Abrir acuerdo",            icon: AlertCircle,  iconColor: "text-sky-600",    placeholder: "¿Por qué se abre este acuerdo?",                        buttonLabel: "Abrir"             },
+  PENDING:     { title: "Retroceder a Pendiente",   icon: ChevronLeft,  iconColor: "text-amber-600",  placeholder: "¿Por qué se revierte? ¿Qué quedó incompleto?",          buttonLabel: "Retroceder"        },
+  IN_PROGRESS: { title: "Poner en proceso",          icon: ChevronRight, iconColor: "text-blue-600",   placeholder: "¿Qué acción se está tomando? ¿Quién lidera?",           buttonLabel: "Poner en proceso"  },
+  TRACKING:    { title: "Pasar a seguimiento",       icon: AlertTriangle, iconColor: "text-violet-600", placeholder: "¿Qué se está monitoreando? ¿Cada cuánto?",             buttonLabel: "En seguimiento"    },
+  EVIDENCE:    { title: "Solicitar evidencia",       icon: AlertTriangle, iconColor: "text-orange-600", placeholder: "¿Qué evidencia se requiere? ¿Plazo?",                  buttonLabel: "Solicitar evidencia" },
+  FULFILLED:   { title: "Marcar como Cumplido",      icon: CheckCircle2, iconColor: "text-green-600",  placeholder: "¿Cómo se resolvió? Referencia a acta, entregable...",  buttonLabel: "Marcar cumplido"   },
+  CLOSED:      { title: "Cerrar acuerdo",            icon: CheckCircle2, iconColor: "text-teal-600",   placeholder: "¿Por qué se cierra? ¿Qué se logró?",                   buttonLabel: "Cerrar"            },
+  ESCALATED:   { title: "Escalar acuerdo",           icon: AlertTriangle, iconColor: "text-red-600",   placeholder: "¿A quién se escala? ¿Cuál es el bloqueo?",             buttonLabel: "Escalar",          destructive: true },
+  CANCELLED:   { title: "Cancelar acuerdo",          icon: XCircle,      iconColor: "text-gray-500",   placeholder: "¿Por qué se cancela? ¿Qué condición no se cumplió?",   buttonLabel: "Cancelar acuerdo", destructive: true },
 };
 
 function TransitionNoteDialog({ agreement, targetStatus, onClose }: {
@@ -1186,9 +1197,14 @@ function AgreementDialog({ open, onClose, initial }: {
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Estado</label>
               <Select value={form.status} onChange={e => set("status", e.target.value as AgreementStatus)}>
+                <SelectOption value="OPEN">Abierto</SelectOption>
                 <SelectOption value="PENDING">Pendiente</SelectOption>
                 <SelectOption value="IN_PROGRESS">En proceso</SelectOption>
+                <SelectOption value="TRACKING">En seguimiento</SelectOption>
+                <SelectOption value="EVIDENCE">Evidencia</SelectOption>
                 <SelectOption value="FULFILLED">Cumplido</SelectOption>
+                <SelectOption value="CLOSED">Cerrado</SelectOption>
+                <SelectOption value="ESCALATED">Escalado</SelectOption>
                 <SelectOption value="CANCELLED">Cancelado</SelectOption>
               </Select>
             </div>
