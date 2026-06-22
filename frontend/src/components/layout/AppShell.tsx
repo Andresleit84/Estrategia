@@ -6,6 +6,8 @@ import { TopBar } from "./TopBar";
 import { useSocket } from "@/hooks/useSocket";
 import { useCycles } from "@/hooks/useCycles";
 import { useAllObjectives } from "@/hooks/useObjectives";
+import { useInitiatives, useObjectiveInitiativeLinks } from "@/hooks/useInitiatives";
+import { useBacklogList } from "@/hooks/useBacklog";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { SetupGuide } from "@/components/shared/SetupGuide";
 import { ConfirmProvider } from "@/hooks/useConfirm";
@@ -281,10 +283,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { sidebarOpen, closeSidebar, presentationMode, presentationCompany, exitPresentation } = useUIStore();
   const pathname = usePathname();
 
-  // Pre-warm cache global: ciclos y objetivos están disponibles antes de que
-  // cualquier página los necesite, eliminando la dependencia de navegación previa.
+  // Pre-warm cache global — todos los datos críticos de trazabilidad disponibles
+  // desde el primer render, sin importar en qué página aterrice el usuario.
   useCycles();
   useAllObjectives();
+  useInitiatives();
+  useObjectiveInitiativeLinks();
+  useBacklogList({ type: "EPIC" });
+  useBacklogList({ type: "FEATURE" });
+  useBacklogList({ type: "STORY" });
 
   const isFullWidth = !!pathname && FULL_WIDTH_ROUTES.some(
     r => pathname === r || pathname.endsWith(r) || pathname.includes(r + "/"),
