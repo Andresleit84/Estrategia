@@ -239,10 +239,17 @@ function InitiativeCard({
                 {init.team_name}
               </span>
             )}
-            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-              <Milestone className="h-2.5 w-2.5" />
-              {t("milestones", { done: init.completed_milestones, total: init.total_milestones })}
-            </span>
+            {init.total_milestones > 0 ? (
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                <Milestone className="h-2.5 w-2.5" />
+                {t("milestones", { done: init.completed_milestones, total: init.total_milestones })}
+              </span>
+            ) : (init.key_results?.length ?? 0) === 0 && (
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground/60 italic">
+                <Milestone className="h-2.5 w-2.5" />
+                Sin hitos ni KRs
+              </span>
+            )}
             {init.key_results?.length > 0 && (
               <Badge variant="outline" className="text-[10px] py-0 h-4 px-1.5 text-primary">
                 {init.key_results.length} KR{init.key_results.length > 1 ? "s" : ""}
@@ -457,7 +464,9 @@ function ListView({
 
               {/* Progress text */}
               <span className="text-xs tabular-nums text-muted-foreground text-right font-mono">
-                {Math.round(init.progress)}%
+                {(init.total_milestones > 0 || (init.key_results?.length ?? 0) > 0)
+                  ? `${Math.round(init.progress)}%`
+                  : "—"}
               </span>
 
               {/* Team */}
