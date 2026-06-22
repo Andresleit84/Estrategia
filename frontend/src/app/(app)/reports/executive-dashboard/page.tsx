@@ -373,7 +373,7 @@ function GapPill({ gap }: { gap: number }) {
 }
 
 function ForecastDot({ status }: { status: "on_track" | "at_risk" | "critical" }) {
-  const m = FORECAST_META[status];
+  const m = FORECAST_META[status] ?? FORECAST_META.at_risk;
   return (
     <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold", m.bg, m.text)}>
       <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: m.color }} />
@@ -517,7 +517,7 @@ function CycleProjectionSection({ data }: { data: CycleProjection }) {
                               className="h-full rounded-full"
                               style={{
                                 width: `${obj.progress}%`,
-                                background: FORECAST_META[obj.forecastStatus].color,
+                                background: (FORECAST_META[obj.forecastStatus] ?? FORECAST_META.at_risk).color,
                               }}
                             />
                           </div>
