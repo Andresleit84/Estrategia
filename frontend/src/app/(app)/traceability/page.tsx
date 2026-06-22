@@ -383,7 +383,7 @@ export default function TraceabilityPage() {
     }
   }, [canvasRef, viewMode]);
 
-  const { data: cycles = [], isLoading: cyclesLoading } = useCycles();
+  const { data: cycles = [], isPending: cyclesLoading } = useCycles();
   const { data: problems        = [] } = useProblems();
   const { data: intents         = [] } = useStrategicIntents();
   const { data: agreements      = [] } = useAgreements();
