@@ -41,6 +41,7 @@ import { ImportModule } from './modules/import/import.module';
 import { AgreementsModule } from './modules/agreements/agreements.module';
 import { ConsultantModule } from './modules/consultant/consultant.module';
 import { InternalModule } from './modules/internal/internal.module';
+import { PlanningModule } from './modules/planning/planning.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { OrgContextInterceptor } from './common/interceptors/org-context.interceptor';
 
@@ -94,6 +95,7 @@ import { OrgContextInterceptor } from './common/interceptors/org-context.interce
     AgreementsModule,
     ConsultantModule,
     InternalModule,
+    PlanningModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
