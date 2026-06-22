@@ -708,6 +708,87 @@ export class ReportsService {
     return row?.fn_consejo_package ?? {};
   }
 
+  // ── Guardrails (No Negociables) ───────────────────────────────────────────────
+
+  async listGuardrails(orgId: string) {
+    return this.db.query(
+      `SELECT id, category, title, risk_description, kri_description,
+              threshold, escalation_trigger, owner, status, trend, sort_order
+       FROM board_guardrails
+       WHERE organization_id = $1
+       ORDER BY sort_order, category, created_at`,
+      [orgId],
+    );
+  }
+
+  async upsertGuardrail(orgId: string, id: string | null, body: Record<string, unknown>) {
+    const result = await this.db.queryOne<{ p_out_id: string }>(
+      `CALL sp_upsert_board_guardrail($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,NULL)`,
+      [
+        orgId, id ?? null,
+        body['category'] ?? null, body['title'] ?? null,
+        body['risk_description'] ?? null, body['kri_description'] ?? null,
+        body['threshold'] ?? null, body['escalation_trigger'] ?? null,
+        body['owner'] ?? null,
+        body['status'] ?? 'VERDE', body['trend'] ?? 'STABLE',
+        body['sort_order'] ?? 0,
+      ],
+    );
+    await this.redis.delPattern(`reports:*:${orgId}:*`);
+    return { id: result?.p_out_id };
+  }
+
+  async deleteGuardrail(orgId: string, id: string) {
+    await this.db.execute(`CALL sp_delete_board_guardrail($1,$2)`, [orgId, id]);
+    await this.redis.delPattern(`reports:*:${orgId}:*`);
+    return { ok: true };
+  }
+
+  // ── Board Decisions ────────────────────────────────────────────────────────────
+
+  async listBoardDecisions(orgId: string, cycleId: string) {
+    return this.db.query(
+      `SELECT id, title, context, options_json AS options, recommendation,
+              status, owner, decided_at, decision_note, created_at
+       FROM board_decisions
+       WHERE organization_id = $1 AND cycle_id = $2
+         AND status IN ('PENDING','DECIDED','DEFERRED')
+       ORDER BY created_at DESC`,
+      [orgId, cycleId],
+    );
+  }
+
+  async upsertBoardDecision(orgId: string, id: string | null, body: Record<string, unknown>) {
+    const result = await this.db.queryOne<{ p_out_id: string }>(
+      `CALL sp_upsert_board_decision($1,$2,$3,$4,$5,$6::jsonb,$7,$8,$9,$10,NULL)`,
+      [
+        orgId, id ?? null,
+        body['cycle_id'] ?? null, body['title'] ?? null,
+        body['context'] ?? null,
+        JSON.stringify(body['options'] ?? []),
+        body['recommendation'] ?? null,
+        body['status'] ?? 'PENDING',
+        body['owner'] ?? null,
+        body['decision_note'] ?? null,
+      ],
+    );
+    await this.redis.delPattern(`reports:*:${orgId}:*`);
+    return { id: result?.p_out_id };
+  }
+
+  async deleteBoardDecision(orgId: string, id: string) {
+    await this.db.execute(`CALL sp_delete_board_decision($1,$2)`, [orgId, id]);
+    await this.redis.delPattern(`reports:*:${orgId}:*`);
+    return { ok: true };
+  }
+
+  // ── KR Crítico toggle ─────────────────────────────────────────────────────────
+
+  async setKrCritical(orgId: string, krId: string, isCritical: boolean) {
+    await this.db.execute(`CALL sp_set_kr_critical($1,$2,$3)`, [orgId, krId, isCritical]);
+    return { ok: true };
+  }
+
   // ── Governance Activities (custom) ─────────────────────────────────────────
 
   async createGovernanceActivity(orgId: string, userId: string, body: Record<string, unknown>) {

@@ -70,6 +70,45 @@ export interface ConsejoGovernanceCommitment {
   status: string;
 }
 
+export interface CriticalKR {
+  id: string;
+  code: string | null;
+  title: string;
+  objective_id: string;
+  objective_code: string | null;
+  objective_title: string;
+  progress: number;
+  confidence: number;
+  status: string;
+  owner_name: string | null;
+  days_since_checkin: number;
+}
+
+export interface BoardGuardrail {
+  id: string;
+  category: string;
+  title: string;
+  risk_description: string | null;
+  kri_description: string | null;
+  threshold: string | null;
+  escalation_trigger: string | null;
+  owner: string | null;
+  status: "VERDE" | "AMBER" | "ROJO";
+  trend: "UP" | "STABLE" | "DOWN";
+}
+
+export interface BoardDecision {
+  id: string;
+  title: string;
+  context: string | null;
+  options: string[];
+  recommendation: string | null;
+  status: "PENDING" | "DECIDED" | "DEFERRED" | "CLOSED";
+  owner: string | null;
+  decided_at: string | null;
+  decision_note: string | null;
+}
+
 export interface ConsejoPackage {
   cycle: ConsejoPackageCycle;
   executive_summary: ConsejoExecutiveSummary;
@@ -78,6 +117,9 @@ export interface ConsejoPackage {
   top_risks: ConsejoRisk[];
   initiatives_summary: ConsejoInitiativesSummary;
   governance_commitments: ConsejoGovernanceCommitment[];
+  critical_krs: CriticalKR[];
+  guardrails: BoardGuardrail[];
+  requested_decisions: BoardDecision[];
 }
 
 export function useConsejoPackage(cycleId: string | undefined) {

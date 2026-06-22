@@ -220,6 +220,72 @@ export class ReportsController {
     return this.svc.getConsejoPackage(user.organization_id, cycleId);
   }
 
+  // ── Guardrails (No Negociables) ─────────────────────────────────────────────
+
+  @Get('guardrails')
+  listGuardrails(@CurrentUser() user: UserSession) {
+    return this.svc.listGuardrails(user.organization_id);
+  }
+
+  @Post('guardrails')
+  createGuardrail(@CurrentUser() user: UserSession, @Body() body: Record<string, unknown>) {
+    return this.svc.upsertGuardrail(user.organization_id, null, body);
+  }
+
+  @Patch('guardrails/:id')
+  updateGuardrail(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.upsertGuardrail(user.organization_id, id, body);
+  }
+
+  @Delete('guardrails/:id')
+  deleteGuardrail(@CurrentUser() user: UserSession, @Param('id', ParseUUIDPipe) id: string) {
+    return this.svc.deleteGuardrail(user.organization_id, id);
+  }
+
+  // ── Board Decisions (Decisiones Solicitadas) ─────────────────────────────────
+
+  @Get('board-decisions/:cycleId')
+  listBoardDecisions(
+    @CurrentUser() user: UserSession,
+    @Param('cycleId', ParseUUIDPipe) cycleId: string,
+  ) {
+    return this.svc.listBoardDecisions(user.organization_id, cycleId);
+  }
+
+  @Post('board-decisions')
+  createBoardDecision(@CurrentUser() user: UserSession, @Body() body: Record<string, unknown>) {
+    return this.svc.upsertBoardDecision(user.organization_id, null, body);
+  }
+
+  @Patch('board-decisions/:id')
+  updateBoardDecision(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.upsertBoardDecision(user.organization_id, id, body);
+  }
+
+  @Delete('board-decisions/:id')
+  deleteBoardDecision(@CurrentUser() user: UserSession, @Param('id', ParseUUIDPipe) id: string) {
+    return this.svc.deleteBoardDecision(user.organization_id, id);
+  }
+
+  // ── KR Crítico toggle ────────────────────────────────────────────────────────
+
+  @Patch('kr-critical/:krId')
+  setKrCritical(
+    @CurrentUser() user: UserSession,
+    @Param('krId', ParseUUIDPipe) krId: string,
+    @Body('is_critical') isCritical: boolean,
+  ) {
+    return this.svc.setKrCritical(user.organization_id, krId, isCritical);
+  }
+
   @PlanFree()
   @Get('welcome-context')
   getWelcomeContext(
