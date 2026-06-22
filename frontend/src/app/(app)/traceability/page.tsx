@@ -723,7 +723,7 @@ export default function TraceabilityPage() {
           <GapsPanel groups={gapGroups} onClose={() => setShowGaps(false)} />
         )}
 
-        {viewMode === "columns" && (
+        {viewMode === "columns" && !isLoadingAll && (
           <TraceabilityView
             cycles={cycles}
             externalSelection={externalSelection}
