@@ -56,10 +56,9 @@ import { OrgContextInterceptor } from './common/interceptors/org-context.interce
     TelegramModule,
     NotificationsModule,
     ThrottlerModule.forRoot([
-      { name: 'short',  ttl: 1000,        limit: 10  },
-      { name: 'medium', ttl: 10000,       limit: 50  },
-      { name: 'long',   ttl: 60000,       limit: 200 },
-      { name: 'auth',   ttl: 3_600_000,   limit: 5   },
+      { name: 'short',  ttl: 1000,   limit: 200  },
+      { name: 'medium', ttl: 10000,  limit: 500  },
+      { name: 'long',   ttl: 60000,  limit: 2000 },
     ]),
     DatabaseModule,
     AuthModule,
