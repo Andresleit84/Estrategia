@@ -7,7 +7,7 @@ import {
   Network, GitBranch, SlidersHorizontal, X, Share2,
   Triangle, Download, ImageIcon, FileImage, Filter,
   Play, Pause, MonitorPlay, ChevronRight,
-  AlertTriangle, CircleDot, Layers, Rocket, Target, Workflow,
+  AlertTriangle, CircleDot, Layers, Rocket, Target, Workflow, Loader2,
 } from "lucide-react";
 import { Select, SelectOption } from "@/components/ui/select";
 import { TraceabilityView } from "@/components/okr/TraceabilityView";
@@ -383,7 +383,7 @@ export default function TraceabilityPage() {
     }
   }, [canvasRef, viewMode]);
 
-  const { data: cycles          = [] } = useCycles();
+  const { data: cycles = [], isLoading: cyclesLoading } = useCycles();
   const { data: problems        = [] } = useProblems();
   const { data: intents         = [] } = useStrategicIntents();
   const { data: agreements      = [] } = useAgreements();
@@ -393,19 +393,28 @@ export default function TraceabilityPage() {
   const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
   const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
 
-  const { data: stratObjs     = [] } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [] } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [] } = useObjectives(quarterlyCycle?.id);
+  const { data: stratObjs     = [], isLoading: stratLoading     } = useObjectives(strategicCycle?.id);
+  const { data: annualObjs    = [], isLoading: annualLoading    } = useObjectives(annualCycle?.id);
+  const { data: quarterlyObjs = [], isLoading: quarterlyLoading } = useObjectives(quarterlyCycle?.id);
 
   // Tree nodes — single recursive query from strategic root covers all levels
-  const { data: stratTree = [] } = useObjectiveTree(strategicCycle?.id ?? null);
-  const { data: initiatives   = [] } = useInitiatives();
-  const { data: backlogTree   = [] } = useBacklogTree();
+  const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
+  const { data: initiatives   = [], isLoading: initLoading   } = useInitiatives();
+  const { data: backlogTree   = [], isLoading: backlogLoading } = useBacklogTree();
   const { data: backlogStats       } = useBacklogStats();
-  const { data: objectiveLinks = [] } = useObjectiveInitiativeLinks();
-  const { data: epics          = [] } = useBacklogList({ type: "EPIC" });
+  const { data: objectiveLinks = [], isLoading: linksLoading } = useObjectiveInitiativeLinks();
+  const { data: epics          = [], isLoading: epicsLoading  } = useBacklogList({ type: "EPIC" });
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
+
+  // Blocks the canvas only on the queries that drive the main OKR chain.
+  // Backlog/epics load in the background — if they're slow they shouldn't freeze the canvas.
+  // isLoading (not isFetching) means background refetches don't re-trigger the overlay.
+  const isLoadingAll =
+    cyclesLoading ||
+    (!!strategicCycle && stratLoading) ||
+    (!!annualCycle    && annualLoading) ||
+    initLoading || linksLoading;
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
   const activeProblems    = problems.filter(p => p.status !== "RESOLVED" && p.status !== "DEPRIORITIZED");
@@ -675,6 +684,14 @@ export default function TraceabilityPage() {
 
       {/* ── Canvas ── */}
       <div ref={canvasRef} className="flex-1 min-h-0 relative overflow-hidden">
+        {/* Loading state — blocks canvas until ALL core queries have data on this mount */}
+        {isLoadingAll && (
+          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-background/80 backdrop-blur-sm rounded-xl">
+            <Loader2 className="h-7 w-7 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Cargando cadena estratégica…</p>
+          </div>
+        )}
+
         {/* Tour mode overlay */}
         {tourActive && tourCurrent && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 px-4 py-2 rounded-full border border-primary/40 bg-primary/10 backdrop-blur-sm shadow-lg pointer-events-auto">
