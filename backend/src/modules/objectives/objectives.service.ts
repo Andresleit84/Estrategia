@@ -58,21 +58,40 @@ export class ObjectivesService {
 
   async getTree(orgId: string, cycleId: string) {
     return this.db.query(
-      `WITH RECURSIVE tree AS (
-        SELECT id, code, title, description, level, status, progress,
-               parent_objective_id, owner_id, owner_name, owner_email,
-               team_id, team_name, kr_count, 0 AS depth
-        FROM v_objectives_with_progress
-        WHERE organization_id = $1 AND cycle_id = $2
-          AND parent_objective_id IS NULL
-        UNION ALL
-        SELECT o.id, o.code, o.title, o.description, o.level, o.status, o.progress,
-               o.parent_objective_id, o.owner_id, o.owner_name, o.owner_email,
-               o.team_id, o.team_name, o.kr_count, t.depth + 1
-        FROM v_objectives_with_progress o
-        JOIN tree t ON o.parent_objective_id = t.id
-        WHERE o.organization_id = $1
-      )
+      `WITH RECURSIVE
+        -- Step 1: all objectives in the requested cycle
+        seeds AS (
+          SELECT id, code, title, description, level, status, progress,
+                 parent_objective_id, owner_id, owner_name, owner_email,
+                 team_id, team_name, kr_count
+          FROM v_objectives_with_progress
+          WHERE organization_id = $1 AND cycle_id = $2
+        ),
+        -- Step 2: walk UP from seeds to collect ancestors (any cycle)
+        ancestors AS (
+          SELECT s.id, s.code, s.title, s.description, s.level, s.status, s.progress,
+                 s.parent_objective_id, s.owner_id, s.owner_name, s.owner_email,
+                 s.team_id, s.team_name, s.kr_count
+          FROM seeds s
+          UNION
+          SELECT o.id, o.code, o.title, o.description, o.level, o.status, o.progress,
+                 o.parent_objective_id, o.owner_id, o.owner_name, o.owner_email,
+                 o.team_id, o.team_name, o.kr_count
+          FROM v_objectives_with_progress o
+          JOIN ancestors a ON o.id = a.parent_objective_id
+          WHERE o.organization_id = $1
+        ),
+        -- Step 3: build top-down tree from the full ancestor+seed set
+        tree AS (
+          SELECT a.*, 0 AS depth
+          FROM ancestors a
+          WHERE a.parent_objective_id IS NULL
+             OR a.parent_objective_id NOT IN (SELECT id FROM ancestors)
+          UNION ALL
+          SELECT a.*, t.depth + 1
+          FROM ancestors a
+          JOIN tree t ON a.parent_objective_id = t.id
+        )
       SELECT t.*,
         COALESCE(
           (SELECT json_agg(json_build_object(
