@@ -393,28 +393,29 @@ export default function TraceabilityPage() {
   const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
   const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
 
-  const { data: stratObjs     = [], isLoading: stratLoading     } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [], isLoading: annualLoading    } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [], isLoading: quarterlyLoading } = useObjectives(quarterlyCycle?.id);
+  const { data: stratObjs     = [], isPending: stratPending     } = useObjectives(strategicCycle?.id);
+  const { data: annualObjs    = [], isPending: annualPending    } = useObjectives(annualCycle?.id);
+  const { data: quarterlyObjs = [], isPending: quarterlyPending } = useObjectives(quarterlyCycle?.id);
 
   // Tree nodes — single recursive query from strategic root covers all levels
   const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
-  const { data: initiatives   = [], isLoading: initLoading   } = useInitiatives();
+  const { data: initiatives   = [], isPending: initPending    } = useInitiatives();
   const { data: backlogTree   = [], isLoading: backlogLoading } = useBacklogTree();
   const { data: backlogStats       } = useBacklogStats();
-  const { data: objectiveLinks = [], isLoading: linksLoading } = useObjectiveInitiativeLinks();
+  const { data: objectiveLinks = [], isPending: linksPending  } = useObjectiveInitiativeLinks();
   const { data: epics          = [], isLoading: epicsLoading  } = useBacklogList({ type: "EPIC" });
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
 
-  // Blocks the canvas only on the queries that drive the main OKR chain.
-  // Backlog/epics load in the background — if they're slow they shouldn't freeze the canvas.
-  // isLoading (not isFetching) means background refetches don't re-trigger the overlay.
+  // isPending (not isLoading) avoids the race condition where fetchStatus is still 'idle'
+  // in the same render that enabled flips to true — isLoading would be false in that window,
+  // clearing the overlay before data arrives. isPending stays true until data is received.
   const isLoadingAll =
     cyclesLoading ||
-    (!!strategicCycle && stratLoading) ||
-    (!!annualCycle    && annualLoading) ||
-    initLoading || linksLoading;
+    (!!strategicCycle && stratPending) ||
+    (!!annualCycle    && annualPending) ||
+    (!!quarterlyCycle && quarterlyPending) ||
+    initPending || linksPending;
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
   const activeProblems    = problems.filter(p => p.status !== "RESOLVED" && p.status !== "DEPRIORITIZED");
