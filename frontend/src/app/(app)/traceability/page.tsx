@@ -393,9 +393,9 @@ export default function TraceabilityPage() {
   const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
   const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
 
-  const { data: stratObjs     = [], isPending: stratPending     } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [], isPending: annualPending    } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [], isPending: quarterlyPending } = useObjectives(quarterlyCycle?.id);
+  const { data: stratObjs     = [], isLoading: stratLoading     } = useObjectives(strategicCycle?.id);
+  const { data: annualObjs    = [], isLoading: annualLoading    } = useObjectives(annualCycle?.id);
+  const { data: quarterlyObjs = [], isLoading: quarterlyLoading } = useObjectives(quarterlyCycle?.id);
 
   // Tree nodes — single recursive query from strategic root covers all levels
   const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
@@ -407,26 +407,16 @@ export default function TraceabilityPage() {
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
 
-  // Safety valve: never keep the canvas blank longer than 6s regardless of API slowness.
-  // This matters when init/links queries retry on error (TanStack default: 3 retries ~7s total).
-  const [forceUnblock, setForceUnblock] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setForceUnblock(true), 6000);
-    return () => clearTimeout(t);
-  }, []);
-
-  // isPending for cycle-dependent objectives: covers the fetchStatus='idle' gap that isLoading
-  // misses (when cycles come from cache, the dependent query is enabled but not yet fetching
-  // in the same render — isLoading is false for that one render, isPending stays true).
-  // isLoading for init/links: always-running queries; using isPending would block the whole
-  // canvas if those endpoints are slow (retries up to 7s before status='error').
-  const isLoadingAll = !forceUnblock && (
+  // TraceabilityView (columns view) used to fetch its own data independently, causing a race
+  // condition where the semi-transparent overlay was visible but empty data showed through.
+  // Now all data is passed as props — isLoading guards are sufficient because TraceabilityView
+  // only mounts after !isLoadingAll, so TanStack Query cache is already populated on mount.
+  const isLoadingAll =
     cyclesLoading ||
-    (!!strategicCycle && stratPending) ||
-    (!!annualCycle    && annualPending) ||
-    (!!quarterlyCycle && quarterlyPending) ||
-    initLoading || linksLoading
-  );
+    (!!strategicCycle && stratLoading) ||
+    (!!annualCycle    && annualLoading) ||
+    (!!quarterlyCycle && quarterlyLoading) ||
+    initLoading || linksLoading;
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
   const activeProblems    = problems.filter(p => p.status !== "RESOLVED" && p.status !== "DEPRIORITIZED");
@@ -737,6 +727,16 @@ export default function TraceabilityPage() {
         {viewMode === "columns" && !isLoadingAll && (
           <TraceabilityView
             cycles={cycles}
+            problems={problems}
+            intents={intents}
+            stratObjs={stratObjs}
+            annualObjs={annualObjs}
+            quarterlyObjs={quarterlyObjs}
+            initiatives={initiatives}
+            epics={epics}
+            features={features}
+            stories={stories}
+            objectiveLinks={objectiveLinks}
             externalSelection={externalSelection}
             showAllRelations={showAllRelations}
           />

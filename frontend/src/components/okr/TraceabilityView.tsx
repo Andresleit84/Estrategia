@@ -10,15 +10,14 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ProgressRing } from "@/components/okr/ProgressRing";
 import { TraceabilityCheckInDrawer } from "@/components/okr/TraceabilityCheckInDrawer";
-import { useProblems, useProblemIntents } from "@/hooks/useProblems";
+import { useProblemIntents } from "@/hooks/useProblems";
 import {
-  useStrategicIntents,
   useIntentProblems,
   useIntentObjectives,
 } from "@/hooks/useStrategicIntents";
-import { useObjectives, useObjectiveAlignments } from "@/hooks/useObjectives";
-import { useInitiatives, useObjectiveInitiativeLinks } from "@/hooks/useInitiatives";
-import { useBacklogList } from "@/hooks/useBacklog";
+import { useObjectiveAlignments } from "@/hooks/useObjectives";
+import type { Objective } from "@/hooks/useObjectives";
+import type { Initiative, ObjectiveInitiativeLink } from "@/hooks/useInitiatives";
 import type { Cycle } from "@/hooks/useCycles";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -264,25 +263,35 @@ function ColDivider({ active }: { active: boolean }) {
 
 interface Props {
   cycles: Cycle[];
+  problems?: any[];
+  intents?: any[];
+  stratObjs?: Objective[];
+  annualObjs?: Objective[];
+  quarterlyObjs?: Objective[];
+  initiatives?: Initiative[];
+  epics?: any[];
+  features?: any[];
+  stories?: any[];
+  objectiveLinks?: ObjectiveInitiativeLink[];
   externalSelection?: { id: string; layer: string } | null;
   showAllRelations?: boolean;
 }
 
-export function TraceabilityView({ cycles, externalSelection, showAllRelations = false }: Props) {
-  const strategicCycle = cycles.find(c => c.type === "CUSTOM"    && c.status === "ACTIVE");
-  const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
-  const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
-
-  const { data: problems      = [] } = useProblems();
-  const { data: intents       = [] } = useStrategicIntents();
-  const { data: stratObjs     = [] } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [] } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [] } = useObjectives(quarterlyCycle?.id);
-  const { data: initiatives   = [] } = useInitiatives();
-  const { data: epics         = [] } = useBacklogList({ type: "EPIC" });
-  const { data: features      = [] } = useBacklogList({ type: "FEATURE" });
-  const { data: stories       = [] } = useBacklogList({ type: "STORY" });
-  const { data: objectiveLinks = [] } = useObjectiveInitiativeLinks();
+export function TraceabilityView({
+  cycles,
+  problems = [],
+  intents = [],
+  stratObjs = [],
+  annualObjs = [],
+  quarterlyObjs = [],
+  initiatives = [],
+  epics = [],
+  features = [],
+  stories = [],
+  objectiveLinks = [],
+  externalSelection,
+  showAllRelations = false,
+}: Props) {
 
   const [selected, setSelected] = useState<{ id: string; layer: string } | null>(null);
   const [checkInTarget, setCheckInTarget] = useState<{ id: string; title: string; layer: LayerId } | null>(null);
@@ -1015,7 +1024,14 @@ export function TraceabilityView({ cycles, externalSelection, showAllRelations =
                     <span className={cn(LAYER_CFG.initiatives.accent)}>
                       {STATUS_L[i.status] ?? i.status}
                     </span>
-                    <span className="tabular-nums">{i.progress}%</span>
+                    <div className="flex items-center gap-2">
+                      {i.key_results?.length > 0 && (
+                        <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                          {i.key_results.length} KR{i.key_results.length !== 1 ? "s" : ""}
+                        </span>
+                      )}
+                      <span className="tabular-nums">{i.progress}%</span>
+                    </div>
                   </div>
                 </button>
                 <CardActions layer="initiatives" id={i.id} title={i.title} onCheckIn={openCheckIn} />
@@ -1047,6 +1063,11 @@ export function TraceabilityView({ cycles, externalSelection, showAllRelations =
                     {e.code && <span className="text-[9px] font-mono font-semibold text-muted-foreground block">{e.code}</span>}
                     <p className="text-xs font-semibold leading-snug line-clamp-2">{e.title}</p>
                   </div>
+                  {e.initiative_title && (
+                    <p className="text-[9px] text-teal-600 dark:text-teal-400 truncate mb-1 leading-tight">
+                      ↑ {e.initiative_title}
+                    </p>
+                  )}
                   <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                     <span className={cn(LAYER_CFG.epics.accent)}>
                       {STATUS_L[e.status] ?? e.status}
@@ -1085,6 +1106,11 @@ export function TraceabilityView({ cycles, externalSelection, showAllRelations =
                     {f.code && <span className="text-[9px] font-mono font-semibold text-muted-foreground block">{f.code}</span>}
                     <p className="text-xs font-semibold leading-snug line-clamp-2">{f.title}</p>
                   </div>
+                  {f.parent_title && (
+                    <p className="text-[9px] text-cyan-600 dark:text-cyan-400 truncate mb-1 leading-tight">
+                      ↑ {f.parent_title}
+                    </p>
+                  )}
                   <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                     <span className={cn(LAYER_CFG.features.accent)}>
                       {STATUS_L[f.status] ?? f.status}
