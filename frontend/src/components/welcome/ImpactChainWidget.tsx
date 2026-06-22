@@ -315,9 +315,9 @@ function GapSummaryBar() {
       .map(f => ({ id: f.id, code: f.code, title: f.title, href: `/backlog?open=${f.id}` }));
 
     return [
-      { id: "obj-no-kr",    label: "OKRs sin resultado clave",  severity: "critical", items: objsNoKr    },
-      { id: "epic-no-init", label: "Épicas sin iniciativa",     severity: "high",     items: epicsNoInit },
-      { id: "feat-no-epic", label: "Features sin épica",        severity: "medium",   items: featuresNoEpic },
+      { id: "obj-no-kr",    label: "OKRs sin resultado clave",  severity: "critical" as const, items: objsNoKr    },
+      { id: "epic-no-init", label: "Épicas sin iniciativa",     severity: "high"     as const, items: epicsNoInit },
+      { id: "feat-no-epic", label: "Features sin épica",        severity: "medium"   as const, items: featuresNoEpic },
     ].filter(g => g.items.length > 0);
   }, [cycles, allObjs, epics, features]);
 
