@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../../database/database.service';
+import { DbService } from '../../database/db.service';
 
 @Injectable()
 export class PlanningService {
-  constructor(private readonly db: DatabaseService) {}
+  constructor(private readonly db: DbService) {}
 
   // ─── Sessions ───────────────────────────────────────────
 
