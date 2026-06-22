@@ -393,9 +393,9 @@ export default function TraceabilityPage() {
   const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
   const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
 
-  const { data: stratObjs     = [], isLoading: stratLoading     } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [], isLoading: annualLoading    } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [], isLoading: quarterlyLoading } = useObjectives(quarterlyCycle?.id);
+  const { data: stratObjs     = [], isPending: stratPending     } = useObjectives(strategicCycle?.id);
+  const { data: annualObjs    = [], isPending: annualPending    } = useObjectives(annualCycle?.id);
+  const { data: quarterlyObjs = [], isPending: quarterlyPending } = useObjectives(quarterlyCycle?.id);
 
   // Tree nodes — single recursive query from strategic root covers all levels
   const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
@@ -407,15 +407,15 @@ export default function TraceabilityPage() {
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
 
-  // TraceabilityView (columns view) used to fetch its own data independently, causing a race
-  // condition where the semi-transparent overlay was visible but empty data showed through.
-  // Now all data is passed as props — isLoading guards are sufficient because TraceabilityView
-  // only mounts after !isLoadingAll, so TanStack Query cache is already populated on mount.
+  // isPending (status==='pending') cubre el gap del primer render donde fetchStatus='idle'
+  // pero isLoading (status==='pending' && fetchStatus==='fetching') no. Los objetivos se
+  // habilitan cuando cycles carga — en ese mismo render isPending=true correctamente.
+  // La guarda !!cycle evita bloquear cuando no hay ciclo activo (isPending=true en disabled).
   const isLoadingAll =
     cyclesLoading ||
-    (!!strategicCycle && stratLoading) ||
-    (!!annualCycle    && annualLoading) ||
-    (!!quarterlyCycle && quarterlyLoading) ||
+    (!!strategicCycle && stratPending) ||
+    (!!annualCycle    && annualPending) ||
+    (!!quarterlyCycle && quarterlyPending) ||
     initLoading || linksLoading;
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
