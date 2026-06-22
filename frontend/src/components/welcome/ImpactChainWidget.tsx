@@ -8,7 +8,6 @@ import {
   type ImpactNode, type ImpactNodeType,
 } from "@/hooks/useBacklog";
 import { useAllObjectives } from "@/hooks/useObjectives";
-import { useInitiatives, useObjectiveInitiativeLinks } from "@/hooks/useInitiatives";
 import { useBacklogList } from "@/hooks/useBacklog";
 import { useCycles } from "@/hooks/useCycles";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -286,69 +285,113 @@ function ChainSkeleton() {
 }
 
 // ── Gap summary bar ───────────────────────────────────────────────────────────
+// Lógica idéntica a trazabilidad/page.tsx gapGroups — mismas 4 categorías.
+
+interface GapItem { id: string; code: string | null; title: string; href: string }
+interface GapGroup { id: string; label: string; severity: "critical" | "high" | "medium"; items: GapItem[] }
 
 function GapSummaryBar() {
-  const { data: cycles = [] }        = useCycles();
-  const { data: allObjs = [] }       = useAllObjectives();
-  const { data: links = [] }         = useObjectiveInitiativeLinks();
-  const { data: initiatives = [] }   = useInitiatives();
-  const { data: epics = [] }         = useBacklogList({ type: "EPIC" });
+  const { data: cycles  = [] } = useCycles();
+  const { data: allObjs = [] } = useAllObjectives();
+  const { data: epics   = [] } = useBacklogList({ type: "EPIC" });
+  const { data: features= [] } = useBacklogList({ type: "FEATURE" });
 
-  const gaps = useMemo(() => {
-    // Solo ciclos activos relevantes (anual + trimestral)
-    const activeCycleIds = new Set(
-      cycles
-        .filter(c => c.status === "ACTIVE" && (c.type === "ANNUAL" || c.type === "QUARTERLY"))
-        .map(c => c.id)
-    );
+  const groups = useMemo<GapGroup[]>(() => {
+    const activeCycleIds = new Set(cycles.filter(c => c.status === "ACTIVE").map(c => c.id));
 
-    // OKRs activos (empresa/área/equipo) sin iniciativa vinculada
-    const linkedObjIds = new Set(links.map(l => l.objective_id));
-    const okrsWithoutInit = allObjs.filter(
-      o => activeCycleIds.has(o.cycle_id) &&
-           o.status === "ACTIVE" &&
-           o.level !== "INDIVIDUAL" &&
-           !linkedObjIds.has(o.id)
-    ).length;
+    // 1. OKRs sin resultado clave (kr_count === 0)
+    const objsNoKr = allObjs
+      .filter(o => activeCycleIds.has(o.cycle_id) && o.status !== "CANCELLED" && o.kr_count === 0)
+      .map(o => ({ id: o.id, code: o.code, title: o.title, href: "/strategic" }));
 
-    // Iniciativas activas sin épica vinculada
-    const initiativeIdsWithEpic = new Set(
-      epics.filter(e => e.initiative_id).map(e => e.initiative_id!)
-    );
-    const initsWithoutEpic = initiatives.filter(
-      i => i.status === "IN_PROGRESS" && !initiativeIdsWithEpic.has(i.id)
-    ).length;
+    // 2. Épicas sin iniciativa vinculada
+    const epicsNoInit = (epics as any[])
+      .filter(e => !e.initiative_id)
+      .map(e => ({ id: e.id, code: e.code, title: e.title, href: `/backlog?open=${e.id}` }));
 
-    return { okrsWithoutInit, initsWithoutEpic, total: okrsWithoutInit + initsWithoutEpic };
-  }, [cycles, allObjs, links, initiatives, epics]);
+    // 3. Features sin épica padre
+    const featuresNoEpic = (features as any[])
+      .filter(f => !f.parent_id)
+      .map(f => ({ id: f.id, code: f.code, title: f.title, href: `/backlog?open=${f.id}` }));
 
-  if (gaps.total === 0) {
+    return [
+      { id: "obj-no-kr",    label: "OKRs sin resultado clave",  severity: "critical", items: objsNoKr    },
+      { id: "epic-no-init", label: "Épicas sin iniciativa",     severity: "high",     items: epicsNoInit },
+      { id: "feat-no-epic", label: "Features sin épica",        severity: "medium",   items: featuresNoEpic },
+    ].filter(g => g.items.length > 0);
+  }, [cycles, allObjs, epics, features]);
+
+  const total = groups.reduce((s, g) => s + g.items.length, 0);
+
+  if (total === 0) {
     return (
       <div className="flex items-center gap-1.5 px-4 py-2.5 border-t bg-emerald-50/50 dark:bg-emerald-950/10">
         <CheckCircle className="h-3 w-3 text-emerald-500 shrink-0" />
         <span className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
-          Cadena estratégica completa — sin brechas detectadas
+          Sin brechas — cadena estratégica completa
         </span>
       </div>
     );
   }
 
-  const items = [
-    gaps.okrsWithoutInit > 0 && `${gaps.okrsWithoutInit} OKR${gaps.okrsWithoutInit > 1 ? "s" : ""} sin iniciativa`,
-    gaps.initsWithoutEpic > 0 && `${gaps.initsWithoutEpic} iniciativa${gaps.initsWithoutEpic > 1 ? "s" : ""} sin épica`,
-  ].filter(Boolean) as string[];
+  const severityColor: Record<string, string> = {
+    critical: "text-rose-600 dark:text-rose-400",
+    high:     "text-amber-600 dark:text-amber-400",
+    medium:   "text-yellow-600 dark:text-yellow-400",
+  };
 
   return (
-    <Link
-      href="/traceability"
-      className="flex items-center gap-2 px-4 py-2.5 border-t bg-amber-50/60 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors group"
-    >
-      <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
-      <span className="text-[10px] font-medium text-amber-700 dark:text-amber-400 flex-1 min-w-0">
-        {items.join(" · ")}
-      </span>
-      <ArrowUpRight className="h-3 w-3 text-amber-500 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-    </Link>
+    <div className="border-t">
+      {/* Header */}
+      <Link
+        href="/traceability"
+        className="flex items-center justify-between gap-2 px-4 py-2.5 bg-amber-50/70 dark:bg-amber-950/15 hover:bg-amber-100/60 dark:hover:bg-amber-950/25 transition-colors group"
+      >
+        <div className="flex items-center gap-1.5">
+          <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
+          <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+            Brechas pendientes
+          </span>
+          <span className="text-[10px] font-bold bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-1.5 py-0.5 rounded-full tabular-nums">
+            {total}
+          </span>
+        </div>
+        <span className="text-[10px] text-amber-600 dark:text-amber-400 flex items-center gap-0.5 opacity-70 group-hover:opacity-100 transition-opacity">
+          Ver en trazabilidad <ArrowUpRight className="h-2.5 w-2.5" />
+        </span>
+      </Link>
+
+      {/* Lista por categoría */}
+      <div className="divide-y divide-border/40">
+        {groups.map(group => (
+          <div key={group.id} className="px-4 py-2">
+            <p className={cn("text-[10px] font-semibold uppercase tracking-wider mb-1", severityColor[group.severity])}>
+              {group.label} ({group.items.length})
+            </p>
+            <div className="space-y-0.5">
+              {group.items.slice(0, 4).map(item => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="flex items-center gap-1.5 py-0.5 hover:text-primary transition-colors"
+                >
+                  <span className="h-1 w-1 rounded-full bg-muted-foreground/40 shrink-0" />
+                  {item.code && (
+                    <span className="text-[10px] font-mono text-muted-foreground/60 shrink-0">{item.code}</span>
+                  )}
+                  <span className="text-[10px] text-foreground/70 truncate">{item.title}</span>
+                </Link>
+              ))}
+              {group.items.length > 4 && (
+                <Link href="/traceability" className="text-[10px] text-muted-foreground hover:text-primary transition-colors pl-2.5">
+                  +{group.items.length - 4} más…
+                </Link>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
