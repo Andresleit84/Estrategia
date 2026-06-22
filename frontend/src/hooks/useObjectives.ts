@@ -78,6 +78,16 @@ export function useObjectives(
   });
 }
 
+// Trae todos los objetivos del org en una sola llamada. Permite cargar en paralelo
+// con cycles sin depender secuencialmente de que cycles cargue primero.
+export function useAllObjectives() {
+  return useQuery<Objective[]>({
+    queryKey: ["objectives", "all"],
+    queryFn: () => api.get("/objectives"),
+    staleTime: 2 * 60 * 1000,
+  });
+}
+
 export function useObjective(id: string | null) {
   return useQuery<Objective>({
     queryKey: ["objectives", id],

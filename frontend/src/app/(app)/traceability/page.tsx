@@ -17,7 +17,7 @@ import { TraceabilityDeployTree } from "@/components/okr/TraceabilityDeployTree"
 import { useProblems } from "@/hooks/useProblems";
 import { useStrategicIntents } from "@/hooks/useStrategicIntents";
 import { useCycles } from "@/hooks/useCycles";
-import { useObjectives, useObjectiveTree } from "@/hooks/useObjectives";
+import { useAllObjectives, useObjectiveTree } from "@/hooks/useObjectives";
 import { useInitiatives, useObjectiveInitiativeLinks } from "@/hooks/useInitiatives";
 import { useBacklogTree, useBacklogStats, useBacklogList } from "@/hooks/useBacklog";
 import { useAgreements, useAgreementLinks } from "@/hooks/useAgreements";
@@ -393,9 +393,13 @@ export default function TraceabilityPage() {
   const annualCycle    = cycles.find(c => c.type === "ANNUAL"    && c.status === "ACTIVE");
   const quarterlyCycle = cycles.find(c => c.type === "QUARTERLY" && c.status === "ACTIVE");
 
-  const { data: stratObjs     = [], isPending: stratPending     } = useObjectives(strategicCycle?.id);
-  const { data: annualObjs    = [], isPending: annualPending    } = useObjectives(annualCycle?.id);
-  const { data: quarterlyObjs = [], isPending: quarterlyPending } = useObjectives(quarterlyCycle?.id);
+  // Una sola llamada para todos los objetivos del org, en paralelo con cycles.
+  // Elimina la dependencia secuencial cycles→objectives que causaba que algunos
+  // ciclos (annual, quarterly) no cargaran en la primera visita directa a la página.
+  const { data: allObjs = [], isPending: objsPending } = useAllObjectives();
+  const stratObjs     = useMemo(() => allObjs.filter(o => o.cycle_id === strategicCycle?.id), [allObjs, strategicCycle?.id]);
+  const annualObjs    = useMemo(() => allObjs.filter(o => o.cycle_id === annualCycle?.id),    [allObjs, annualCycle?.id]);
+  const quarterlyObjs = useMemo(() => allObjs.filter(o => o.cycle_id === quarterlyCycle?.id), [allObjs, quarterlyCycle?.id]);
 
   // Tree nodes — single recursive query from strategic root covers all levels
   const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
@@ -407,16 +411,9 @@ export default function TraceabilityPage() {
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
 
-  // isPending (status==='pending') cubre el gap del primer render donde fetchStatus='idle'
-  // pero isLoading (status==='pending' && fetchStatus==='fetching') no. Los objetivos se
-  // habilitan cuando cycles carga — en ese mismo render isPending=true correctamente.
-  // La guarda !!cycle evita bloquear cuando no hay ciclo activo (isPending=true en disabled).
-  const isLoadingAll =
-    cyclesLoading ||
-    (!!strategicCycle && stratPending) ||
-    (!!annualCycle    && annualPending) ||
-    (!!quarterlyCycle && quarterlyPending) ||
-    initLoading || linksLoading;
+  // cycles y allObjs usan isPending — cubren el gap del primer render (fetchStatus='idle').
+  // init/links usan isLoading — tienen endpoints rápidos y retry confiable.
+  const isLoadingAll = cyclesLoading || objsPending || initLoading || linksLoading;
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
   const activeProblems    = problems.filter(p => p.status !== "RESOLVED" && p.status !== "DEPRIORITIZED");
