@@ -752,7 +752,6 @@ export class ReportsService {
               status, owner, decided_at, decision_note, created_at
        FROM board_decisions
        WHERE organization_id = $1 AND cycle_id = $2
-         AND status IN ('PENDING','DECIDED','DEFERRED')
        ORDER BY created_at DESC`,
       [orgId, cycleId],
     );

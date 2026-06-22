@@ -107,6 +107,7 @@ export interface BoardDecision {
   owner: string | null;
   decided_at: string | null;
   decision_note: string | null;
+  created_at: string;
 }
 
 export interface ConsejoPackage {

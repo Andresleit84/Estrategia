@@ -1117,48 +1117,221 @@ function DecisionForm({ cycleId, initial, decisionId, onDone }: {
   );
 }
 
+// ── Decision card (shared lista + kanban) ─────────────────────────────────────
+
+function DecisionCard({ d, i, canEdit, onEdit, onDelete, expanded, onToggleFollowup }: {
+  d: BoardDecision;
+  i: number;
+  canEdit: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
+  expanded: boolean;
+  onToggleFollowup: () => void;
+}) {
+  const daysSince = useMemo(() => {
+    const ref = d.status !== "PENDING" && d.decided_at ? d.decided_at : d.created_at;
+    return Math.floor((Date.now() - new Date(ref).getTime()) / 86_400_000);
+  }, [d]);
+
+  const isStale = d.status === "PENDING" && daysSince > 30;
+
+  return (
+    <Card className={cn("p-4 cursor-grab active:cursor-grabbing", isStale && "border-amber-300 dark:border-amber-800")}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0 space-y-1.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-mono text-muted-foreground">#{i + 1}</span>
+            <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", DECISION_STATUS_COLOR[d.status])}>
+              {DECISION_STATUS_LABEL[d.status]}
+            </span>
+            {isStale && (
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium flex items-center gap-1">
+                <AlertTriangle className="h-3 w-3" /> {daysSince}d sin mover
+              </span>
+            )}
+            {!isStale && daysSince > 0 && (
+              <span className="text-xs text-muted-foreground">{daysSince}d</span>
+            )}
+          </div>
+          <p className="text-sm font-semibold leading-snug">{d.title}</p>
+          {d.owner && <p className="text-xs text-muted-foreground">{d.owner}</p>}
+          {d.context && <p className="text-xs text-muted-foreground line-clamp-2">{d.context}</p>}
+          {d.recommendation && (
+            <p className="text-xs text-blue-600 dark:text-blue-400 truncate">→ {d.recommendation}</p>
+          )}
+          {d.decision_note && (
+            <div className="flex items-start gap-1.5 text-xs text-green-600 dark:text-green-400">
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+              <span className="line-clamp-1">{d.decision_note}</span>
+            </div>
+          )}
+          {d.status === "DECIDED" && (
+            <button
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mt-1"
+              onClick={e => { e.stopPropagation(); onToggleFollowup(); }}
+            >
+              <CheckCircle2 className={cn("h-3.5 w-3.5", (d as any).follow_up_verified ? "text-green-500" : "")} />
+              Seguimiento
+              {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            </button>
+          )}
+          {expanded && (
+            <FollowupInline decision={d} onClose={onToggleFollowup} canEdit={canEdit} />
+          )}
+        </div>
+        {canEdit && (
+          <div className="flex gap-1 shrink-0">
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={e => { e.stopPropagation(); onEdit(); }}>
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={e => { e.stopPropagation(); onDelete(); }}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+// ── Kanban column ─────────────────────────────────────────────────────────────
+
+const KANBAN_COLS: { status: BoardDecision["status"]; label: string; color: string }[] = [
+  { status: "PENDING",  label: "Pendiente",  color: "border-blue-300  dark:border-blue-800"  },
+  { status: "DECIDED",  label: "Decidida",   color: "border-green-300 dark:border-green-800" },
+  { status: "DEFERRED", label: "Diferida",   color: "border-amber-300 dark:border-amber-800" },
+  { status: "CLOSED",   label: "Cerrada",    color: "border-muted"                           },
+];
+
+function KanbanColumn({ col, items, canEdit, onEdit, onDelete, expanded, onToggleFollowup, onDrop }: {
+  col: typeof KANBAN_COLS[number];
+  items: BoardDecision[];
+  canEdit: boolean;
+  onEdit: (d: BoardDecision) => void;
+  onDelete: (id: string) => void;
+  expanded: string | null;
+  onToggleFollowup: (id: string) => void;
+  onDrop: (id: string, newStatus: BoardDecision["status"]) => void;
+}) {
+  const [over, setOver] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col min-w-[220px] flex-1 rounded-lg border-2 transition-colors",
+        over ? "border-purple-400 bg-purple-50/30 dark:bg-purple-900/10" : col.color + " bg-muted/10"
+      )}
+      onDragOver={e => { e.preventDefault(); setOver(true); }}
+      onDragLeave={() => setOver(false)}
+      onDrop={e => {
+        e.preventDefault();
+        setOver(false);
+        const id = e.dataTransfer.getData("text/plain");
+        if (id) onDrop(id, col.status);
+      }}
+    >
+      {/* Column header */}
+      <div className="px-3 pt-3 pb-2 flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{col.label}</span>
+        <span className="text-xs tabular-nums text-muted-foreground bg-muted rounded-full px-2 py-0.5">{items.length}</span>
+      </div>
+
+      {/* Cards */}
+      <div className="flex flex-col gap-2 p-2 min-h-[80px]">
+        {items.map((d, i) => (
+          <div
+            key={d.id}
+            draggable={canEdit}
+            onDragStart={e => {
+              e.dataTransfer.setData("text/plain", d.id);
+              e.dataTransfer.effectAllowed = "move";
+            }}
+          >
+            <DecisionCard
+              d={d} i={i} canEdit={canEdit}
+              onEdit={() => onEdit(d)}
+              onDelete={() => onDelete(d.id)}
+              expanded={expanded === d.id}
+              onToggleFollowup={() => onToggleFollowup(d.id)}
+            />
+          </div>
+        ))}
+        {!items.length && (
+          <div className="flex-1 flex items-center justify-center py-6">
+            <span className="text-xs text-muted-foreground/50">Sin decisiones</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── TabDecisions ──────────────────────────────────────────────────────────────
+
 function TabDecisions({ canEdit }: { canEdit: boolean }) {
   const { data: cycles = [] } = useCycles();
   const [cycleId, setCycleId] = useState("");
-  const { data: sessions = [] } = useBoardSessions();
+  const [view, setView] = useState<"list" | "kanban">("kanban");
 
   const activeCycle = cycles.find(c => c.status === "ACTIVE") ?? cycles[0];
   const effectiveCycleId = cycleId || activeCycle?.id || "";
 
   const { data: decisions = [], isLoading } = useBoardDecisions(effectiveCycleId || undefined);
+  const upsert = useUpsertBoardDecision();
   const del = useDeleteBoardDecision();
-  const updateFollowup = useUpdateDecisionFollowup();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [expandedFollowup, setExpandedFollowup] = useState<string | null>(null);
 
-  const pending = decisions.filter(d => d.status === "PENDING").length;
-  const canAdd = decisions.length < 3;
+  const canAdd = decisions.filter(d => d.status !== "CLOSED").length < 3;
+
+  const moveDecision = async (id: string, newStatus: BoardDecision["status"]) => {
+    const d = decisions.find(x => x.id === id);
+    if (!d || d.status === newStatus) return;
+    await upsert.mutateAsync({ id, data: { status: newStatus } });
+  };
 
   if (isLoading) return <div className="space-y-3">{[1,2].map(i => <Skeleton key={i} className="h-24" />)}</div>;
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-base font-semibold">Bitácora de Decisiones del Consejo</h2>
+          <h2 className="text-base font-semibold">Decisiones del Consejo</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Máximo 3 decisiones por sesión. Toda decisión queda registrada con responsable, fecha y verificación en el próximo Pulso.
+            Máx. 3 decisiones activas por ciclo. Arrastrá la tarjeta para cambiar su estado.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <select className="rounded-md border border-border bg-background px-3 py-2 text-sm h-9"
             value={cycleId} onChange={e => setCycleId(e.target.value)}>
             <option value="">Ciclo activo</option>
             {cycles.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
+          {/* Vista toggle */}
+          <div className="flex rounded-md border border-border overflow-hidden h-9">
+            <button
+              onClick={() => setView("list")}
+              className={cn("px-3 text-xs font-medium transition-colors flex items-center gap-1.5",
+                view === "list" ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted"
+              )}
+            >
+              <Minus className="h-3.5 w-3.5" /> Lista
+            </button>
+            <button
+              onClick={() => setView("kanban")}
+              className={cn("px-3 text-xs font-medium transition-colors flex items-center gap-1.5",
+                view === "kanban" ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted"
+              )}
+            >
+              <ChevronRight className="h-3.5 w-3.5" /> Kanban
+            </button>
+          </div>
           {canEdit && !showForm && canAdd && (
-            <Button size="sm" className="gap-1.5" onClick={() => { setEditingId(null); setShowForm(true); }}>
+            <Button size="sm" className="gap-1.5 h-9" onClick={() => { setEditingId(null); setShowForm(true); }}>
               <Plus className="h-3.5 w-3.5" /> Agregar
             </Button>
-          )}
-          {canEdit && !canAdd && !showForm && (
-            <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">Máx. 3 decisiones por ciclo</span>
           )}
         </div>
       </div>
@@ -1172,7 +1345,7 @@ function TabDecisions({ canEdit }: { canEdit: boolean }) {
           <Gavel className="h-10 w-10 text-muted-foreground mx-auto mb-3 opacity-30" />
           <p className="font-medium text-muted-foreground">Sin decisiones registradas</p>
           <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
-            Registra las decisiones que el Consejo necesita tomar: trade-offs, guardrails, desbloqueos.
+            Registra las decisiones que el Consejo necesita tomar.
           </p>
           {canEdit && effectiveCycleId && (
             <Button size="sm" variant="outline" className="mt-4" onClick={() => setShowForm(true)}>
@@ -1182,78 +1355,62 @@ function TabDecisions({ canEdit }: { canEdit: boolean }) {
         </div>
       )}
 
-      <div className="space-y-3">
-        {decisions.map((d, i) => (
-          <div key={d.id}>
-            {editingId === d.id && effectiveCycleId ? (
-              <DecisionForm cycleId={effectiveCycleId} initial={d} decisionId={d.id} onDone={() => setEditingId(null)} />
-            ) : (
-              <Card className="p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0 space-y-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-mono text-muted-foreground">#{i+1}</span>
-                      <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", DECISION_STATUS_COLOR[d.status])}>
-                        {DECISION_STATUS_LABEL[d.status]}
-                      </span>
-                      {d.owner && <span className="text-xs text-muted-foreground">{d.owner}</span>}
-                    </div>
-                    <p className="text-sm font-semibold">{d.title}</p>
-                    {d.context && <p className="text-xs text-muted-foreground">{d.context}</p>}
-                    {d.options?.length > 0 && (
-                      <ul className="space-y-0.5">
-                        {d.options.map((opt, oi) => (
-                          <li key={oi} className="flex items-start gap-2 text-xs text-muted-foreground">
-                            <span className="font-mono shrink-0">{String.fromCharCode(65+oi)}.</span>
-                            <span>{opt}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {d.recommendation && (
-                      <div className="bg-blue-50 dark:bg-blue-950/20 rounded p-2 text-xs">
-                        <span className="font-semibold text-blue-700 dark:text-blue-300">Rec. Dirección: </span>
-                        <span className="text-blue-800 dark:text-blue-200">{d.recommendation}</span>
-                      </div>
-                    )}
-                    {d.decision_note && (
-                      <div className="bg-green-50 dark:bg-green-950/20 rounded p-2 text-xs flex items-start gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0 mt-0.5" />
-                        <span className="text-green-800 dark:text-green-200">{d.decision_note}</span>
-                      </div>
-                    )}
+      {/* ── KANBAN ── */}
+      {view === "kanban" && !!decisions.length && (
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {KANBAN_COLS.map(col => {
+            const colItems = decisions.filter(d => d.status === col.status);
+            return (
+              <KanbanColumn
+                key={col.status}
+                col={col}
+                items={colItems}
+                canEdit={canEdit}
+                onEdit={d => { setEditingId(d.id); setShowForm(false); }}
+                onDelete={id => del.mutate(id)}
+                expanded={expandedFollowup}
+                onToggleFollowup={id => setExpandedFollowup(expandedFollowup === id ? null : id)}
+                onDrop={moveDecision}
+              />
+            );
+          })}
+        </div>
+      )}
 
-                    {/* Follow-up section */}
-                    {d.status === "DECIDED" && (
-                      <button
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-                        onClick={() => setExpandedFollowup(expandedFollowup === d.id ? null : d.id)}
-                      >
-                        <CheckCircle2 className={cn("h-3.5 w-3.5", (d as any).follow_up_verified ? "text-green-500" : "text-muted-foreground")} />
-                        Seguimiento
-                        {expandedFollowup === d.id ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                      </button>
-                    )}
-                    {expandedFollowup === d.id && (
-                      <FollowupInline decision={d} onClose={() => setExpandedFollowup(null)} canEdit={canEdit} />
-                    )}
-                  </div>
-                  {canEdit && (
-                    <div className="flex gap-1 shrink-0">
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => setEditingId(d.id)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" onClick={() => del.mutate(d.id)}>
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* ── LISTA ── */}
+      {view === "list" && !!decisions.length && (
+        <div className="space-y-3 max-w-3xl">
+          {decisions.map((d, i) => (
+            <div key={d.id}
+              draggable={false}
+            >
+              {editingId === d.id && effectiveCycleId ? (
+                <DecisionForm cycleId={effectiveCycleId} initial={d} decisionId={d.id} onDone={() => setEditingId(null)} />
+              ) : (
+                <DecisionCard
+                  d={d} i={i} canEdit={canEdit}
+                  onEdit={() => setEditingId(d.id)}
+                  onDelete={() => del.mutate(d.id)}
+                  expanded={expandedFollowup === d.id}
+                  onToggleFollowup={() => setExpandedFollowup(expandedFollowup === d.id ? null : d.id)}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Inline edit en kanban */}
+      {view === "kanban" && editingId && effectiveCycleId && (
+        <div className="max-w-xl">
+          <DecisionForm
+            cycleId={effectiveCycleId}
+            initial={decisions.find(d => d.id === editingId) ?? {}}
+            decisionId={editingId}
+            onDone={() => setEditingId(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }
