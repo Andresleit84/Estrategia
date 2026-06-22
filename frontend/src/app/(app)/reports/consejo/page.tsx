@@ -288,7 +288,7 @@ function GuardrailDialog({
 }: {
   open: boolean;
   onClose: () => void;
-  initial: Partial<GuardrailFormState>;
+  initial: Partial<BoardGuardrail>;
   guardrailId?: string;
 }) {
   const [form, setForm] = useState<GuardrailFormState>({
@@ -299,8 +299,8 @@ function GuardrailDialog({
     threshold: initial.threshold ?? "",
     escalation_trigger: initial.escalation_trigger ?? "",
     owner: initial.owner ?? "",
-    status: initial.status ?? "VERDE",
-    trend: initial.trend ?? "STABLE",
+    status: (initial.status ?? "VERDE") as GuardrailFormState["status"],
+    trend: (initial.trend ?? "STABLE") as GuardrailFormState["trend"],
   });
   const upsert = useUpsertGuardrail();
 
