@@ -323,8 +323,8 @@ function ItemDialog({
   const [desc, setDesc]         = useState(item?.description ?? "");
   const [assignee, setAssignee] = useState(item?.assignee ?? "");
   const [dueDate, setDueDate]   = useState(item?.due_date?.slice(0, 10) ?? "");
-  const [status, setStatus]     = useState<string>(item?.status ?? "TODO");
-  const [type, setType]         = useState<string>(item?.item_type ?? "ARTIFACT");
+  const [status, setStatus]     = useState<PlanningItem["status"]>(item?.status ?? "TODO");
+  const [type, setType]         = useState<PlanningItem["item_type"]>(item?.item_type ?? "ARTIFACT");
 
   function reset() { setTitle(""); setDesc(""); setAssignee(""); setDueDate(""); setStatus("TODO"); setType("ARTIFACT"); }
 
@@ -360,7 +360,7 @@ function ItemDialog({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium mb-1 block">Tipo</label>
-              <Select className="h-8 text-xs" value={type} onChange={(e) => setType(e.target.value)}>
+              <Select className="h-8 text-xs" value={type} onChange={(e) => setType(e.target.value as PlanningItem["item_type"])}>
                 {Object.entries(ITEM_TYPE_LABEL).map(([k, v]) => (
                   <SelectOption key={k} value={k}>{v}</SelectOption>
                 ))}
@@ -368,7 +368,7 @@ function ItemDialog({
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block">Estado</label>
-              <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value as PlanningItem["status"])}>
                 {COLS.map((c) => (
                   <SelectOption key={c} value={c}>{COL_LABEL[c]}</SelectOption>
                 ))}
@@ -519,7 +519,7 @@ function DependenciesPanel({ session }: { session: PlanningSession }) {
   const [fromArea, setFromArea]   = useState("");
   const [toArea, setToArea]       = useState("");
   const [desc, setDesc]           = useState("");
-  const [status, setStatus]       = useState("OPEN");
+  const [status, setStatus]       = useState<PlanningDependency["status"]>("OPEN");
   const [owner, setOwner]         = useState("");
 
   function openEdit(d: PlanningDependency) {
@@ -566,7 +566,7 @@ function DependenciesPanel({ session }: { session: PlanningSession }) {
           </div>
           <Input className="text-sm" placeholder="Descripción de la dependencia" value={desc} onChange={(e) => setDesc(e.target.value)} />
           <div className="grid grid-cols-2 gap-3">
-            <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
+            <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value as PlanningDependency["status"])}>
               {Object.entries(DEP_STATUS_LABEL).map(([k, v]) => <SelectOption key={k} value={k}>{v}</SelectOption>)}
             </Select>
             <Input className="h-8 text-xs" placeholder="Responsable" value={owner} onChange={(e) => setOwner(e.target.value)} />
