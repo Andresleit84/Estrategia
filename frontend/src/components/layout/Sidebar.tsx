@@ -8,7 +8,7 @@ import {
   ChevronLeft, ChevronRight, ChevronDown, Bot,
   AlertTriangle, Compass, CheckSquare, Rocket, LayoutGrid, Network, Layers,
   ChevronsUpDown, Check, Loader2, LayoutDashboard, Package2, GraduationCap, BookOpen,
-  Stethoscope, Briefcase, Map, Handshake, Route, MonitorPlay, User, BellRing, Shield,
+  Stethoscope, Briefcase, Map, Handshake, Route, MonitorPlay, User, BellRing, Shield, Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -64,6 +64,9 @@ const NAV_ITEMS: NavItemDef[] = [
   { key: "backlog",            href: "/backlog",             icon: Layers,            tKey: "backlog",          group: "execution",  desc: "Lista priorizada de trabajo pendiente" },
   { key: "sprints",            href: "/sprints",             icon: LayoutGrid,        tKey: "sprints",          group: "execution",  desc: "Ciclos cortos de ejecución del equipo" },
 
+  // ── Consejo ───────────────────────────────────────────────────────────────
+  { key: "consejo",            href: "/consejo",             icon: Building2,         tKey: "consejo",          group: "consejo",    desc: "Gobierno del Consejo: Pulso OKR, No Negociables y Decisiones" },
+
   // ── Análisis ──────────────────────────────────────────────────────────────
   { key: "reports",            href: "/reports",             icon: BarChart3,         tKey: "reports",          group: "analysis",   desc: "Centro de reportes y análisis ejecutivos" },
 
@@ -80,13 +83,14 @@ const NAV_ITEMS: NavItemDef[] = [
 
 // ── Group config ──────────────────────────────────────────────────────────────
 
-const COLLAPSIBLE_GROUPS = ["diagnostico", "strategy", "execution", "analysis", "consultor", "learn"] as const;
+const COLLAPSIBLE_GROUPS = ["diagnostico", "strategy", "execution", "consejo", "analysis", "consultor", "learn"] as const;
 type CollapsibleGroup = typeof COLLAPSIBLE_GROUPS[number];
 
 const GROUP_COLOR: Record<string, string> = {
   diagnostico: "text-rose-500",
   strategy:    "text-blue-500",
   execution:   "text-violet-500",
+  consejo:     "text-purple-500",
   analysis:    "text-amber-500",
   consultor:   "text-indigo-500",
   learn:       "text-slate-400",
@@ -96,6 +100,7 @@ const GROUP_DOT: Record<string, string> = {
   diagnostico: "bg-rose-500",
   strategy:    "bg-blue-500",
   execution:   "bg-violet-500",
+  consejo:     "bg-purple-500",
   analysis:    "bg-amber-500",
   consultor:   "bg-indigo-500",
   learn:       "bg-slate-400",
@@ -109,35 +114,35 @@ const DEFAULT_MENU_CONFIG: Record<string, Record<string, boolean>> = {
     "sector-assessment": true,  problems: true,  agreements: true,  strategy: true,  program: true,
     strategic: true,  tactical: true,  checkins: true,  initiatives: true,
     delivery: true,  backlog: true,  sprints: true,  reports: true,
-    portfolio: true,  "ai-assistant": true,
+    portfolio: true,  "ai-assistant": true,  consejo: true,
   },
   MANAGER: {
     welcome: true,  traceability: true,  "my-okrs": true,  "getting-started": true,  "demo-setup": false,  "consultant-roadmap": false,  "consultant-digest": false,  docs: true,
     "sector-assessment": true,  problems: true,  agreements: true,  strategy: true,  program: false,
     strategic: true,  tactical: false,  checkins: true,  initiatives: false,
     delivery: true,  backlog: true,  sprints: false,  reports: true,
-    portfolio: false,  "ai-assistant": true,
+    portfolio: false,  "ai-assistant": true,  consejo: false,
   },
   MEMBER: {
     welcome: true,  traceability: false,  "my-okrs": true,  "getting-started": true,  "demo-setup": false,  "consultant-roadmap": false,  "consultant-digest": false,  docs: true,
     "sector-assessment": false,  problems: false,  agreements: false,  strategy: false,  program: false,
     strategic: false,  tactical: true,  checkins: true,  initiatives: true,
     delivery: true,  backlog: true,  sprints: true,  reports: false,
-    portfolio: false,  "ai-assistant": false,
+    portfolio: false,  "ai-assistant": false,  consejo: false,
   },
   VIEWER: {
     welcome: true,  traceability: true,  "my-okrs": true,  "getting-started": false,  "demo-setup": false,  "consultant-roadmap": false,  "consultant-digest": false,  docs: true,
     "sector-assessment": true,  problems: false,  agreements: false,  strategy: false,  program: false,
     strategic: true,  tactical: false,  checkins: false,  initiatives: false,
     delivery: true,  backlog: true,  sprints: false,  reports: true,
-    portfolio: false,  "ai-assistant": false,
+    portfolio: false,  "ai-assistant": false,  consejo: false,
   },
   SECTOR_DIAGNOSTICS: {
     welcome: false,  traceability: false,  "my-okrs": false,  "getting-started": false,  "demo-setup": false,  "consultant-roadmap": false,  docs: false,
     "sector-assessment": true,  problems: false,  agreements: false,  strategy: false,  program: false,
     strategic: false,  tactical: false,  checkins: false,  initiatives: false,
     delivery: false,  backlog: false,  sprints: false,  reports: false,
-    portfolio: false,  "ai-assistant": false,
+    portfolio: false,  "ai-assistant": false,  consejo: false,
   },
 };
 
@@ -156,7 +161,7 @@ const PLAN_MODULES: Record<string, Set<string>> = {
     "sector-assessment", "problems",
     "strategy", "strategic", "agreements", "program",
     "tactical", "checkins", "initiatives", "delivery", "backlog", "sprints",
-    "reports", "ai-assistant",
+    "reports", "ai-assistant", "consejo",
     "consultant-digest", "demo-setup", "consultant-roadmap",
     "getting-started", "docs",
   ]),

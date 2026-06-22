@@ -110,6 +110,7 @@ const FULL_WIDTH_ROUTES = [
   "/delivery",
   "/sprints",
   "/agreements",
+  "/consejo",
 ];
 
 function PresentationBar({ company, onExit }: { company: string; onExit: () => void }) {

@@ -286,6 +286,62 @@ export class ReportsController {
     return this.svc.setKrCritical(user.organization_id, krId, isCritical);
   }
 
+  @Get('cycle-krs/:cycleId')
+  getCycleKRs(
+    @CurrentUser() user: UserSession,
+    @Param('cycleId', ParseUUIDPipe) cycleId: string,
+  ) {
+    return this.svc.getCycleKRs(user.organization_id, cycleId);
+  }
+
+  // ── Board Sessions (Pulso Mensual) ───────────────────────────────────────────
+
+  @Get('board-sessions')
+  listBoardSessions(@CurrentUser() user: UserSession) {
+    return this.svc.listBoardSessions(user.organization_id);
+  }
+
+  @Post('board-sessions')
+  createBoardSession(@CurrentUser() user: UserSession, @Body() body: Record<string, unknown>) {
+    return this.svc.createBoardSession(user.organization_id, body);
+  }
+
+  @Patch('board-sessions/:id')
+  updateBoardSession(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.updateBoardSession(user.organization_id, id, body);
+  }
+
+  @Delete('board-sessions/:id')
+  deleteBoardSession(@CurrentUser() user: UserSession, @Param('id', ParseUUIDPipe) id: string) {
+    return this.svc.deleteBoardSession(user.organization_id, id);
+  }
+
+  // ── Guardrail quick status update ────────────────────────────────────────────
+
+  @Patch('guardrails/:id/status')
+  updateGuardrailStatus(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.updateGuardrailStatus(user.organization_id, id, body);
+  }
+
+  // ── Decision follow-up ───────────────────────────────────────────────────────
+
+  @Patch('board-decisions/:id/followup')
+  updateDecisionFollowup(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.updateDecisionFollowup(user.organization_id, id, body);
+  }
+
   @PlanFree()
   @Get('welcome-context')
   getWelcomeContext(

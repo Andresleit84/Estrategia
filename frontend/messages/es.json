@@ -36,13 +36,15 @@
     "cycleHealth": "Salud del Ciclo",
     "teamHealth": "Salud de Equipos",
     "portfolioReport": "Portfolio",
-    "upcomingMilestones": "Hitos Próximos"
+    "upcomingMilestones": "Hitos Próximos",
+    "consejo": "Consejo"
   },
   "navGroup": {
     "diagnostico": "Diagnóstico",
     "planning": "Planificación",
     "strategy": "Estrategia",
     "execution": "Ejecución",
+    "consejo": "Gobierno del Consejo",
     "analysis": "Análisis",
     "system": "Sistema",
     "consultor": "Consultoría",

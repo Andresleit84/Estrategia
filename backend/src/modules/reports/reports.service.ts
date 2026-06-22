@@ -789,6 +789,82 @@ export class ReportsService {
     return { ok: true };
   }
 
+  async getCycleKRs(orgId: string, cycleId: string) {
+    return this.db.query(
+      `SELECT id, code, title, is_critical, status, confidence_pct, progress,
+              objective_id, objective_code, objective_title, objective_level
+       FROM v_cycle_krs_with_critical
+       WHERE cycle_id = $1 AND organization_id = $2
+       ORDER BY objective_code NULLS LAST, code NULLS LAST`,
+      [cycleId, orgId],
+    );
+  }
+
+  // ── Board Sessions (Pulso Mensual) ────────────────────────────────────────────
+
+  async listBoardSessions(orgId: string) {
+    return this.db.query(
+      `SELECT id, cycle_id, cycle_name, cycle_type, cycle_status,
+              cycle_start, cycle_end, session_date, status,
+              chair, secretary, director_notes, meeting_notes,
+              created_at, updated_at, decisions_count, pending_decisions
+       FROM v_board_sessions
+       WHERE organization_id = $1
+       ORDER BY session_date DESC`,
+      [orgId],
+    );
+  }
+
+  async createBoardSession(orgId: string, body: Record<string, unknown>) {
+    const result = await this.db.queryOne<{ p_out_id: string }>(
+      `CALL sp_create_board_session($1,$2,$3::date,$4,$5,NULL)`,
+      [orgId, body['cycle_id'], body['session_date'], body['chair'] ?? null, body['secretary'] ?? null],
+    );
+    return { id: result?.p_out_id };
+  }
+
+  async updateBoardSession(orgId: string, id: string, body: Record<string, unknown>) {
+    await this.db.execute(
+      `CALL sp_update_board_session($1,$2,$3,$4::date,$5,$6,$7,$8)`,
+      [
+        orgId, id,
+        body['status'] ?? null,
+        body['session_date'] ?? null,
+        body['chair'] ?? null,
+        body['secretary'] ?? null,
+        body['director_notes'] ?? null,
+        body['meeting_notes'] ?? null,
+      ],
+    );
+    return { ok: true };
+  }
+
+  async deleteBoardSession(orgId: string, id: string) {
+    await this.db.execute(`CALL sp_delete_board_session($1,$2)`, [orgId, id]);
+    return { ok: true };
+  }
+
+  // ── Guardrail quick status ─────────────────────────────────────────────────────
+
+  async updateGuardrailStatus(orgId: string, id: string, body: Record<string, unknown>) {
+    await this.db.execute(
+      `CALL sp_update_guardrail_status($1,$2,$3,$4,$5)`,
+      [orgId, id, body['status'] ?? null, body['trend'] ?? null, body['note'] ?? null],
+    );
+    await this.redis.delPattern(`reports:*:${orgId}:*`);
+    return { ok: true };
+  }
+
+  // ── Decision follow-up ──────────────────────────────────────────────────────────
+
+  async updateDecisionFollowup(orgId: string, id: string, body: Record<string, unknown>) {
+    await this.db.execute(
+      `CALL sp_update_decision_followup($1,$2,$3,$4)`,
+      [orgId, id, body['follow_up_note'] ?? null, body['follow_up_verified'] ?? null],
+    );
+    return { ok: true };
+  }
+
   // ── Governance Activities (custom) ─────────────────────────────────────────
 
   async createGovernanceActivity(orgId: string, userId: string, body: Record<string, unknown>) {
