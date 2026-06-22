@@ -331,6 +331,48 @@ export class ReportsController {
     return this.svc.updateGuardrailStatus(user.organization_id, id, body);
   }
 
+  // ── Board Session Agreements (Acuerdos de sesión) ────────────────────────────
+
+  @Get('board-sessions/:sessionId/agreements')
+  listAgreements(
+    @CurrentUser() user: UserSession,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
+  ) {
+    return this.svc.listAgreements(user.organization_id, sessionId);
+  }
+
+  @Post('board-sessions/:sessionId/agreements')
+  createAgreement(
+    @CurrentUser() user: UserSession,
+    @Param('sessionId', ParseUUIDPipe) sessionId: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.upsertAgreement(user.organization_id, sessionId, null, body);
+  }
+
+  @Patch('board-agreements/:id')
+  updateAgreement(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: Record<string, unknown>,
+  ) {
+    return this.svc.upsertAgreement(user.organization_id, null, id, body);
+  }
+
+  @Patch('board-agreements/:id/toggle')
+  toggleAgreement(
+    @CurrentUser() user: UserSession,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body('completed') completed: boolean,
+  ) {
+    return this.svc.toggleAgreement(user.organization_id, id, completed);
+  }
+
+  @Delete('board-agreements/:id')
+  deleteAgreement(@CurrentUser() user: UserSession, @Param('id', ParseUUIDPipe) id: string) {
+    return this.svc.deleteAgreement(user.organization_id, id);
+  }
+
   // ── Decision follow-up ───────────────────────────────────────────────────────
 
   @Patch('board-decisions/:id/followup')

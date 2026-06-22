@@ -19,6 +19,7 @@ import {
   useCycleKRs, useUpdateGuardrailStatus, useUpdateDecisionFollowup,
 } from "@/hooks/useBoardSessions";
 import type { BoardSession } from "@/hooks/useBoardSessions";
+import { useBoardAgreements, useUpsertAgreement, useToggleAgreement, useDeleteAgreement } from "@/hooks/useBoardAgreements";
 import { useCycles } from "@/hooks/useCycles";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -512,8 +513,227 @@ function PulsoDetail({ session, canEdit }: { session: BoardSession; canEdit: boo
               </div>
             )}
           </Card>
+
+          {/* Acuerdos de sesión */}
+          <AgreementsSection sessionId={session.id} canEdit={canEdit} sessionStatus={session.status} />
         </>
       ) : null}
+    </div>
+  );
+}
+
+// ── Acuerdos de sesión ────────────────────────────────────────────────────────
+
+function AgreementsSection({ sessionId, canEdit, sessionStatus }: {
+  sessionId: string;
+  canEdit: boolean;
+  sessionStatus: BoardSession["status"];
+}) {
+  const { data: agreements = [], isLoading } = useBoardAgreements(sessionId);
+  const upsert = useUpsertAgreement();
+  const toggle = useToggleAgreement();
+  const del = useDeleteAgreement();
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState({ text: "", owner: "", due_date: "" });
+
+  const resetForm = () => { setForm({ text: "", owner: "", due_date: "" }); setShowForm(false); setEditingId(null); };
+
+  const startEdit = (a: { id: string; text: string; owner: string | null; due_date: string | null }) => {
+    setEditingId(a.id);
+    setForm({ text: a.text, owner: a.owner ?? "", due_date: a.due_date ?? "" });
+    setShowForm(false);
+  };
+
+  const save = async () => {
+    if (!form.text.trim()) return;
+    await upsert.mutateAsync({
+      sessionId,
+      id: editingId ?? undefined,
+      data: { text: form.text, owner: form.owner || undefined, due_date: form.due_date || undefined },
+    });
+    resetForm();
+  };
+
+  const isEditable = canEdit && sessionStatus !== "CLOSED";
+
+  const done = agreements.filter(a => a.completed).length;
+  const total = agreements.length;
+
+  return (
+    <Card className="p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            Acuerdos de la Sesión
+          </h3>
+          {total > 0 && (
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {done}/{total} cumplidos
+            </span>
+          )}
+        </div>
+        {isEditable && !showForm && !editingId && (
+          <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs" onClick={() => setShowForm(true)}>
+            <Plus className="h-3 w-3" /> Agregar
+          </Button>
+        )}
+      </div>
+
+      {/* Barra de progreso de acuerdos */}
+      {total > 0 && (
+        <div className="mb-4">
+          <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full bg-green-500 transition-all"
+              style={{ width: `${Math.round((done / total) * 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Formulario nuevo */}
+      {showForm && (
+        <AgreementForm
+          form={form}
+          setForm={setForm}
+          onSave={save}
+          onCancel={resetForm}
+          isPending={upsert.isPending}
+          label="Agregar acuerdo"
+        />
+      )}
+
+      {/* Lista */}
+      {isLoading ? (
+        <div className="space-y-2">{[1,2].map(i => <Skeleton key={i} className="h-10" />)}</div>
+      ) : !agreements.length && !showForm ? (
+        <p className="text-sm text-muted-foreground italic">
+          Sin acuerdos registrados.
+          {isEditable && " Agrega los compromisos concretos que salieron de la sesión."}
+        </p>
+      ) : (
+        <div className="space-y-1.5">
+          {agreements.map(a => (
+            <div key={a.id}>
+              {editingId === a.id ? (
+                <AgreementForm
+                  form={form}
+                  setForm={setForm}
+                  onSave={save}
+                  onCancel={resetForm}
+                  isPending={upsert.isPending}
+                  label="Guardar"
+                />
+              ) : (
+                <div className={cn(
+                  "flex items-start gap-3 px-3 py-2.5 rounded-lg group transition-colors",
+                  a.completed ? "opacity-60" : "hover:bg-muted/30"
+                )}>
+                  {/* Checkbox */}
+                  <button
+                    disabled={!isEditable}
+                    onClick={() => toggle.mutate({ id: a.id, completed: !a.completed, sessionId })}
+                    className={cn(
+                      "mt-0.5 h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
+                      a.completed
+                        ? "bg-green-500 border-green-500 text-white"
+                        : "border-muted-foreground/40 hover:border-green-400",
+                      !isEditable && "cursor-default"
+                    )}
+                  >
+                    {a.completed && <Check className="h-2.5 w-2.5" />}
+                  </button>
+
+                  {/* Contenido */}
+                  <div className="flex-1 min-w-0">
+                    <p className={cn("text-sm", a.completed && "line-through text-muted-foreground")}>
+                      {a.text}
+                    </p>
+                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                      {a.owner && (
+                        <span className="text-xs text-muted-foreground">{a.owner}</span>
+                      )}
+                      {a.due_date && (
+                        <span className={cn(
+                          "text-xs",
+                          !a.completed && new Date(a.due_date) < new Date()
+                            ? "text-red-500 font-medium"
+                            : "text-muted-foreground"
+                        )}>
+                          {fmtShort(a.due_date)}
+                          {!a.completed && new Date(a.due_date) < new Date() && " · vencido"}
+                        </span>
+                      )}
+                      {a.completed && a.completed_at && (
+                        <span className="text-xs text-green-600 dark:text-green-400">
+                          ✓ {fmtShort(a.completed_at)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Acciones */}
+                  {isEditable && (
+                    <div className="flex gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0"
+                        onClick={() => startEdit(a)}>
+                        <Pencil className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-destructive"
+                        onClick={() => del.mutate({ id: a.id, sessionId })}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function AgreementForm({ form, setForm, onSave, onCancel, isPending, label }: {
+  form: { text: string; owner: string; due_date: string };
+  setForm: React.Dispatch<React.SetStateAction<{ text: string; owner: string; due_date: string }>>;
+  onSave: () => void;
+  onCancel: () => void;
+  isPending: boolean;
+  label: string;
+}) {
+  return (
+    <div className="border border-border rounded-lg p-3 bg-muted/20 mb-2 space-y-2">
+      <textarea
+        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm resize-none min-h-[60px]"
+        placeholder="¿Qué se acordó? Ej: Compliance entrega evidencia SGF al Consejo antes del 15-jul"
+        value={form.text}
+        onChange={e => setForm(f => ({ ...f, text: e.target.value }))}
+        autoFocus
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          className="rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+          placeholder="Responsable"
+          value={form.owner}
+          onChange={e => setForm(f => ({ ...f, owner: e.target.value }))}
+        />
+        <input
+          type="date"
+          className="rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+          value={form.due_date}
+          onChange={e => setForm(f => ({ ...f, due_date: e.target.value }))}
+        />
+      </div>
+      <div className="flex gap-2">
+        <Button size="sm" onClick={onSave} disabled={isPending || !form.text.trim()}>
+          {isPending ? "Guardando…" : label}
+        </Button>
+        <Button size="sm" variant="outline" onClick={onCancel}>Cancelar</Button>
+      </div>
     </div>
   );
 }

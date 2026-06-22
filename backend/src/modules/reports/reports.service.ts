@@ -865,6 +865,47 @@ export class ReportsService {
     return { ok: true };
   }
 
+  // ── Board Session Agreements ──────────────────────────────────────────────────
+
+  async listAgreements(orgId: string, sessionId: string) {
+    return this.db.query(
+      `SELECT id, board_session_id, text, owner, due_date,
+              completed, completed_at, sort_order, created_at
+       FROM board_session_agreements
+       WHERE board_session_id = $1 AND organization_id = $2
+       ORDER BY sort_order, created_at`,
+      [sessionId, orgId],
+    );
+  }
+
+  async upsertAgreement(orgId: string, sessionId: string | null, id: string | null, body: Record<string, unknown>) {
+    await this.db.execute(
+      `CALL sp_upsert_board_agreement($1,$2,$3,$4,$5,$6::date)`,
+      [
+        id ?? null,
+        sessionId ?? (body['board_session_id'] ?? null),
+        orgId,
+        body['text'] ?? '',
+        body['owner'] ?? null,
+        body['due_date'] ?? null,
+      ],
+    );
+    return { ok: true };
+  }
+
+  async toggleAgreement(orgId: string, id: string, completed: boolean) {
+    await this.db.execute(
+      `CALL sp_toggle_board_agreement($1,$2,$3)`,
+      [id, orgId, completed],
+    );
+    return { ok: true };
+  }
+
+  async deleteAgreement(orgId: string, id: string) {
+    await this.db.execute(`CALL sp_delete_board_agreement($1,$2)`, [id, orgId]);
+    return { ok: true };
+  }
+
   // ── Governance Activities (custom) ─────────────────────────────────────────
 
   async createGovernanceActivity(orgId: string, userId: string, body: Record<string, unknown>) {
