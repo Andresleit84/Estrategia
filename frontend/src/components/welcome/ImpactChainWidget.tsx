@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
   useMyImpact, useMyItems,
   type ImpactNode, type ImpactNodeType,
 } from "@/hooks/useBacklog";
+import { useAllObjectives } from "@/hooks/useObjectives";
+import { useInitiatives, useObjectiveInitiativeLinks } from "@/hooks/useInitiatives";
+import { useBacklogList } from "@/hooks/useBacklog";
+import { useCycles } from "@/hooks/useCycles";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
   FileCode2, Layers, Rocket, TrendingUp, Target,
   Compass, Star, ArrowUpRight, GitBranch, CheckCircle2,
-  ChevronDown,
+  ChevronDown, AlertTriangle, CheckCircle,
 } from "lucide-react";
 
 // ── Node entrance animation ──────────────────────────────────────────────────
@@ -281,6 +285,73 @@ function ChainSkeleton() {
   );
 }
 
+// ── Gap summary bar ───────────────────────────────────────────────────────────
+
+function GapSummaryBar() {
+  const { data: cycles = [] }        = useCycles();
+  const { data: allObjs = [] }       = useAllObjectives();
+  const { data: links = [] }         = useObjectiveInitiativeLinks();
+  const { data: initiatives = [] }   = useInitiatives();
+  const { data: epics = [] }         = useBacklogList({ type: "EPIC" });
+
+  const gaps = useMemo(() => {
+    // Solo ciclos activos relevantes (anual + trimestral)
+    const activeCycleIds = new Set(
+      cycles
+        .filter(c => c.status === "ACTIVE" && (c.type === "ANNUAL" || c.type === "QUARTERLY"))
+        .map(c => c.id)
+    );
+
+    // OKRs activos (empresa/área/equipo) sin iniciativa vinculada
+    const linkedObjIds = new Set(links.map(l => l.objective_id));
+    const okrsWithoutInit = allObjs.filter(
+      o => activeCycleIds.has(o.cycle_id) &&
+           o.status === "ACTIVE" &&
+           o.level !== "INDIVIDUAL" &&
+           !linkedObjIds.has(o.id)
+    ).length;
+
+    // Iniciativas activas sin épica vinculada
+    const initiativeIdsWithEpic = new Set(
+      epics.filter(e => e.initiative_id).map(e => e.initiative_id!)
+    );
+    const initsWithoutEpic = initiatives.filter(
+      i => i.status === "IN_PROGRESS" && !initiativeIdsWithEpic.has(i.id)
+    ).length;
+
+    return { okrsWithoutInit, initsWithoutEpic, total: okrsWithoutInit + initsWithoutEpic };
+  }, [cycles, allObjs, links, initiatives, epics]);
+
+  if (gaps.total === 0) {
+    return (
+      <div className="flex items-center gap-1.5 px-4 py-2.5 border-t bg-emerald-50/50 dark:bg-emerald-950/10">
+        <CheckCircle className="h-3 w-3 text-emerald-500 shrink-0" />
+        <span className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+          Cadena estratégica completa — sin brechas detectadas
+        </span>
+      </div>
+    );
+  }
+
+  const items = [
+    gaps.okrsWithoutInit > 0 && `${gaps.okrsWithoutInit} OKR${gaps.okrsWithoutInit > 1 ? "s" : ""} sin iniciativa`,
+    gaps.initsWithoutEpic > 0 && `${gaps.initsWithoutEpic} iniciativa${gaps.initsWithoutEpic > 1 ? "s" : ""} sin épica`,
+  ].filter(Boolean) as string[];
+
+  return (
+    <Link
+      href="/traceability"
+      className="flex items-center gap-2 px-4 py-2.5 border-t bg-amber-50/60 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors group"
+    >
+      <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
+      <span className="text-[10px] font-medium text-amber-700 dark:text-amber-400 flex-1 min-w-0">
+        {items.join(" · ")}
+      </span>
+      <ArrowUpRight className="h-3 w-3 text-amber-500 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+    </Link>
+  );
+}
+
 // ── Main widget ───────────────────────────────────────────────────────────────
 
 export function ImpactChainWidget() {
@@ -324,6 +395,7 @@ export function ImpactChainWidget() {
       )}
 
       <ChainContent data={data} />
+      <GapSummaryBar />
     </div>
   );
 }
