@@ -399,23 +399,34 @@ export default function TraceabilityPage() {
 
   // Tree nodes — single recursive query from strategic root covers all levels
   const { data: stratTree = [], isLoading: treeLoading       } = useObjectiveTree(strategicCycle?.id ?? null);
-  const { data: initiatives   = [], isPending: initPending    } = useInitiatives();
+  const { data: initiatives   = [], isLoading: initLoading    } = useInitiatives();
   const { data: backlogTree   = [], isLoading: backlogLoading } = useBacklogTree();
   const { data: backlogStats       } = useBacklogStats();
-  const { data: objectiveLinks = [], isPending: linksPending  } = useObjectiveInitiativeLinks();
+  const { data: objectiveLinks = [], isLoading: linksLoading  } = useObjectiveInitiativeLinks();
   const { data: epics          = [], isLoading: epicsLoading  } = useBacklogList({ type: "EPIC" });
   const { data: features       = [] } = useBacklogList({ type: "FEATURE" });
   const { data: stories        = [] } = useBacklogList({ type: "STORY" });
 
-  // isPending (not isLoading) avoids the race condition where fetchStatus is still 'idle'
-  // in the same render that enabled flips to true — isLoading would be false in that window,
-  // clearing the overlay before data arrives. isPending stays true until data is received.
-  const isLoadingAll =
+  // Safety valve: never keep the canvas blank longer than 6s regardless of API slowness.
+  // This matters when init/links queries retry on error (TanStack default: 3 retries ~7s total).
+  const [forceUnblock, setForceUnblock] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setForceUnblock(true), 6000);
+    return () => clearTimeout(t);
+  }, []);
+
+  // isPending for cycle-dependent objectives: covers the fetchStatus='idle' gap that isLoading
+  // misses (when cycles come from cache, the dependent query is enabled but not yet fetching
+  // in the same render — isLoading is false for that one render, isPending stays true).
+  // isLoading for init/links: always-running queries; using isPending would block the whole
+  // canvas if those endpoints are slow (retries up to 7s before status='error').
+  const isLoadingAll = !forceUnblock && (
     cyclesLoading ||
     (!!strategicCycle && stratPending) ||
     (!!annualCycle    && annualPending) ||
     (!!quarterlyCycle && quarterlyPending) ||
-    initPending || linksPending;
+    initLoading || linksLoading
+  );
 
   const activeAgreements  = agreements.filter(a => a.status !== "CANCELLED");
   const activeProblems    = problems.filter(p => p.status !== "RESOLVED" && p.status !== "DEPRIORITIZED");
