@@ -11,9 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectOption } from "@/components/ui/select";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
@@ -148,24 +146,19 @@ function NewSessionDialog({ open, onClose }: { open: boolean; onClose: () => voi
           </div>
           <div>
             <label className="text-sm font-medium mb-1 block">Ciclo</label>
-            <Select value={cycleId} onValueChange={setCycleId}>
-              <SelectTrigger><SelectValue placeholder="Sin ciclo" /></SelectTrigger>
-              <SelectContent>
-                {cycles?.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
+            <Select value={cycleId} onChange={(e) => setCycleId(e.target.value)}>
+              <SelectOption value="">Sin ciclo</SelectOption>
+              {cycles?.map((c) => (
+                <SelectOption key={c.id} value={c.id}>{c.name}</SelectOption>
+              ))}
             </Select>
           </div>
           <div>
             <label className="text-sm font-medium mb-1 block">Tipo</label>
-            <Select value={type} onValueChange={setType}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="QUARTERLY">Trimestral</SelectItem>
-                <SelectItem value="ANNUAL">Anual</SelectItem>
-                <SelectItem value="PI">PI Planning</SelectItem>
-              </SelectContent>
+            <Select value={type} onChange={(e) => setType(e.target.value)}>
+              <SelectOption value="QUARTERLY">Trimestral</SelectOption>
+              <SelectOption value="ANNUAL">Anual</SelectOption>
+              <SelectOption value="PI">PI Planning</SelectOption>
             </Select>
           </div>
           <div>
@@ -367,24 +360,18 @@ function ItemDialog({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-medium mb-1 block">Tipo</label>
-              <Select value={type} onValueChange={setType}>
-                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(ITEM_TYPE_LABEL).map(([k, v]) => (
-                    <SelectItem key={k} value={k}>{v}</SelectItem>
-                  ))}
-                </SelectContent>
+              <Select className="h-8 text-xs" value={type} onChange={(e) => setType(e.target.value)}>
+                {Object.entries(ITEM_TYPE_LABEL).map(([k, v]) => (
+                  <SelectOption key={k} value={k}>{v}</SelectOption>
+                ))}
               </Select>
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block">Estado</label>
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {COLS.map((c) => (
-                    <SelectItem key={c} value={c}>{COL_LABEL[c]}</SelectItem>
-                  ))}
-                </SelectContent>
+              <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
+                {COLS.map((c) => (
+                  <SelectOption key={c} value={c}>{COL_LABEL[c]}</SelectOption>
+                ))}
               </Select>
             </div>
           </div>
@@ -579,11 +566,8 @@ function DependenciesPanel({ session }: { session: PlanningSession }) {
           </div>
           <Input className="text-sm" placeholder="Descripción de la dependencia" value={desc} onChange={(e) => setDesc(e.target.value)} />
           <div className="grid grid-cols-2 gap-3">
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {Object.entries(DEP_STATUS_LABEL).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
-              </SelectContent>
+            <Select className="h-8 text-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
+              {Object.entries(DEP_STATUS_LABEL).map(([k, v]) => <SelectOption key={k} value={k}>{v}</SelectOption>)}
             </Select>
             <Input className="h-8 text-xs" placeholder="Responsable" value={owner} onChange={(e) => setOwner(e.target.value)} />
           </div>
