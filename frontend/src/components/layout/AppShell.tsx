@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { useSocket } from "@/hooks/useSocket";
+import { useCycles } from "@/hooks/useCycles";
+import { useAllObjectives } from "@/hooks/useObjectives";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { SetupGuide } from "@/components/shared/SetupGuide";
 import { ConfirmProvider } from "@/hooks/useConfirm";
@@ -278,6 +280,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { connect, disconnect } = useSocket();
   const { sidebarOpen, closeSidebar, presentationMode, presentationCompany, exitPresentation } = useUIStore();
   const pathname = usePathname();
+
+  // Pre-warm cache global: ciclos y objetivos están disponibles antes de que
+  // cualquier página los necesite, eliminando la dependencia de navegación previa.
+  useCycles();
+  useAllObjectives();
 
   const isFullWidth = !!pathname && FULL_WIDTH_ROUTES.some(
     r => pathname === r || pathname.endsWith(r) || pathname.includes(r + "/"),
